@@ -1,0 +1,2 @@
+This is an example file to create the config directory.
+Replace this with actual configuration files.
