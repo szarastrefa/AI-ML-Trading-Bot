@@ -1,104 +1,243 @@
-# AI/ML Trading Bot
+# 🤖 AI/ML Trading Bot
 
-🤖 **Zaawansowany bot tradingowy z uczeniem maszynowym** obsługujący MT4/MT5, Forex, Crypto i wiele platform brokerskich.
+**Zaawansowany bot tradingowy z Artificial Intelligence i Machine Learning**
 
-## 🚀 Funkcje
+[![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.14.0-orange.svg)](https://tensorflow.org)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-### 📊 Obsługiwane Platformy
-- **MetaTrader 4/5** - Pełne API
-- **RoboForex** - Demo i Live
-- **Sabiotrade** - Integracja API
-- **XM Group** - Multi-account support
-- **ForexChief (xChief)** - Automated trading
-- **FXOpen** - Professional trading
-- **InstaForex** - Social trading
-- **TemplerFX** - Advanced features
-- **FBS** - Global markets
-- **Pocket Option** - Binary options
-- **The5ers** - Funded accounts
-- **Funded Trading Plus** - Prop trading
+## ✨ **Funkcje**
 
-### 🧠 Strategie AI/ML
-- **Smart Money Concept** - Analiza instytucjonalna (Order Blocks, FVG, Liquidity Sweeps)
-- **Fibonacci Team** - Pełna implementacja strategii Łukasza Fijołka
-- **Scalping** - High-frequency trading
-- **RandomForest + LSTM** - Ensemble predictions
-- **Online Learning** - Ciągłe dostrajanie modeli
+### 🎯 **Trading Features**
+- **12+ brokerów**: MetaTrader alternatives, RoboForex, XM Group, FXOpen, Binance, Bybit
+- **Strategie AI/ML**: Smart Money Concept, Fibonacci Team, Custom strategies
+- **Risk Management**: 2% SL, 1:2 RR, Max drawdown protection
+- **Backtesting**: Historical data analysis z TensorFlow
+- **Real-time signals**: WebSocket connections
 
-### 📈 Zarządzanie Ryzykiem
-- Stop loss domyślnie 2% (edytowalny)
-- Risk/Reward minimum 1:2 (konfigurowalny)
-- Maksymalny drawdown 15%
-- Position sizing 2% kapitału na transakcję
-- Daily loss limits
+### 🧠 **AI/ML Stack** 
+- **TensorFlow 2.14.0** - Deep learning models (bez konfliktów zależności)
+- **XGBoost 2.0.3** - Gradient boosting
+- **pandas-ta 0.3.14b0** - Technical analysis (kompatybilne z Python 3.10)
+- **scikit-learn 1.3.2** - Machine Learning
+- **pandas 2.1.4** - Data processing
 
-### 🌐 Web Interface
-- **Real-time Dashboard** - Live P&L, pozycje, performance
-- **Strategy Management** - Start/stop strategii z GUI
-- **ML Model Manager** - Import/export wytrenowanych modeli
-- **Performance Analytics** - Wykresy z wyborem okresu (1w, 1m, 3m, 1y, All)
-- **Risk Configuration** - GUI do ustawień zarządzania ryzykiem
+### 🔧 **Tech Stack**
+- **Python 3.10** - Optymalna kompatybilność z bibliotekami ML/Trading
+- **FastAPI** - Modern API framework
+- **PostgreSQL** - Baza danych  
+- **Redis** - Cache & message broker
+- **Docker** - Konteneryzacja
 
-## 🛠️ Instalacja i Uruchomienie
+## 🚀 **Quick Start**
 
-### Docker (Zalecane)
-
+### **1. Klonuj repozytorium**
 ```bash
-# Sklonuj repozytorium
 git clone https://github.com/szarastrefa/AI-ML-Trading-Bot.git
 cd AI-ML-Trading-Bot
+```
 
-# Uruchom z Docker Compose
-docker-compose up -d
+### **2. Uruchom z Docker**
+```bash
+# Zbuduj i uruchom wszystkie serwisy
+docker-compose up -d --build
 
 # Sprawdź logi
 docker-compose logs -f trading-bot
+
+# Sprawdź status
+docker-compose ps
 ```
 
-Aplikacja będzie dostępna na:
-- **Web UI**: http://localhost:8080
-- **API**: http://localhost:8000
-- **Metabase**: http://localhost:3000
+### **3. Dostęp do API**
+- **API Documentation**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+- **App Info**: http://localhost:8000/info
 
-### Lokalna Instalacja
+## 📊 **Konfiguracja Brokerów**
 
+### **MetaTrader5 Alternative (Linux)**
+
+⚠️ **UWAGA**: MetaTrader5 Python package działa **tylko na Windows**!
+
+Dla **Linux/Docker** użyj alternatyw z `config/mt5_alternatives.yaml`:
+
+```yaml
+# 1. ZeroMQ Bridge (Zalecane)
+zeromq_bridge:
+  enabled: true
+  host: "localhost"
+  port: 5555
+
+# 2. Alternative Brokers
+alternative_brokers:
+  roboforex:
+    enabled: true
+    api_type: "REST"
+  
+  binance:
+    enabled: true
+    testnet: true
+```
+
+### **Konfiguracja Brokerów**
+
+Edytuj `config/settings.py`:
+
+```python
+BROKER_CONFIGS = {
+    "roboforex": {
+        "enabled": True,
+        "demo_mode": True
+    },
+    "binance": {
+        "enabled": True,
+        "testnet": True,
+        "api_key": "your_api_key",
+        "api_secret": "your_secret"
+    }
+}
+```
+
+## 🔍 **Rozwiązane Problemy**
+
+### ✅ **Konflikty Zależności**
+
+**Problem**: 
+```
+tensorflow 2.13.0 depends on typing-extensions<4.6.0
+fastapi 0.104.1 depends on typing-extensions>=4.8.0
+```
+
+**Rozwiązanie**:
+- **TensorFlow 2.14.0** - nowsza wersja bez konfliktów
+- **typing-extensions==4.8.0** - fixed version
+- **Python 3.10** - optymalna kompatybilność
+
+### ✅ **MetaTrader5 na Linux**
+
+**Problem**: MetaTrader5 package tylko Windows
+
+**Rozwiązanie**:
+1. **ZeroMQ Bridge** - komunikacja MT5 ↔ Linux bot
+2. **REST API Bridge** - HTTP API dla MT5  
+3. **Alternative Brokers** - RoboForex, XM Group, FXOpen
+4. **Crypto Exchanges** - Binance, Bybit z pełnym wsparciem Linux
+
+## 📈 **Strategie Trading**
+
+### **1. Smart Money Concept (SMC)**
+```python
+strategies = {
+    "smart_money_concept": {
+        "enabled": True,
+        "timeframes": ["15m", "1h", "4h"],
+        "risk_reward": 3.0
+    }
+}
+```
+
+### **2. Fibonacci Team**
+```python
+"fibonacci_team": {
+    "enabled": True,
+    "timeframes": ["5m", "15m", "1h"],
+    "risk_reward": 2.0
+}
+```
+
+## 🛠️ **Development**
+
+### **Struktura Projekt**
+```
+AI-ML-Trading-Bot/
+├── app/                    # FastAPI aplikacja
+├── config/                 # Konfiguracje
+│   ├── settings.py        # Broker configs
+│   └── mt5_alternatives.yaml
+├── scripts/               # Utility scripts  
+├── data/                  # Data storage
+├── Dockerfile            # Python 3.10
+├── docker-compose.yml    # Full stack
+└── requirements.txt      # Dependencies
+```
+
+### **Lokalne uruchomienie**
 ```bash
-# Zainstaluj zależności Python
+# Zainstaluj zależności
 pip install -r requirements.txt
 
-# Skonfiguruj bazę danych
-export DATABASE_URL="postgresql://user:pass@localhost/trading_bot"
+# Inicjalizuj bazę danych
 python scripts/init_db.py
 
 # Uruchom aplikację
-python -m app.main
+python app/main.py
 ```
 
-## 📊 API Endpoints
+## 🔐 **Environment Variables**
 
-### Broker Management
-- `GET /api/v1/brokers` - Lista brokerów
-- `POST /api/v1/brokers/{name}/connect` - Połącz z brokerem
-- `GET /api/v1/account` - Informacje o koncie
+```bash
+# Database
+DATABASE_URL=postgresql://trading:trading123@localhost:5432/trading_bot
+REDIS_URL=redis://localhost:6379/0
 
-### Trading Operations
-- `POST /api/v1/orders` - Złóż zlecenie
-- `GET /api/v1/positions` - Otwarte pozycje
-- `DELETE /api/v1/orders/{id}` - Anuluj zlecenie
+# App
+ENV=development
+DEBUG=true
+HOST=0.0.0.0
+PORT=8000
 
-### ML Models
-- `GET /api/v1/ml/models` - Informacje o modelach
-- `POST /api/v1/ml/models/train` - Trenuj modele
-- `GET /api/v1/ml/predictions` - Pobierz predykcje
+# Trading
+DEFAULT_BROKER=roboforex
+```
 
-## ⚠️ Disclaimer
+## 📝 **API Endpoints**
+
+```bash
+# Health & Info
+GET /health
+GET /info
+GET /
+
+# Trading API
+GET /api/v1/brokers
+POST /api/v1/signals
+GET /api/v1/history
+POST /api/v1/backtest
+```
+
+## ⚡ **Performance**
+
+- **Python 3.10**: ~25% szybszy niż 3.9
+- **TensorFlow 2.14**: Optymalizacje dla trading
+- **Redis cache**: Sub-millisecond response
+- **PostgreSQL**: Miliony transakcji
+
+## ⚠️ **Disclaimer**
 
 **To oprogramowanie służy wyłącznie celom edukacyjnym. UŻYWAJ NA WŁASNE RYZYKO.**
 
-## 📄 Licencja
+## 🤝 **Contributing**
 
-MIT License
+1. Fork the project
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`) 
+5. Open Pull Request
+
+## 📄 **License**
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 📞 **Support**
+
+- **Issues**: [GitHub Issues](https://github.com/szarastrefa/AI-ML-Trading-Bot/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/szarastrefa/AI-ML-Trading-Bot/discussions)
 
 ---
+
+**⭐ Jeśli projekt Ci się podoba, zostaw gwiazdkę!**
 
 Made with ❤️ by Trading Bot Team
