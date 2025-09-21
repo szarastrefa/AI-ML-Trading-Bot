@@ -1,4 +1,4 @@
-# AI/ML Trading Bot - Python 3.11 dla najlepszej wydajności
+# AI/ML Trading Bot - Python 3.11 (fixed libta-dev)
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-# Install system dependencies 
+# Install system dependencies (bez libta-dev - TA-Lib zainstaluje się przez pip)
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -19,7 +19,6 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libssl-dev \
     libffi-dev \
-    libta-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python packages
@@ -40,4 +39,4 @@ RUN chmod +x scripts/*.py scripts/*.sh || true
 
 EXPOSE 8000 8080
 
-CMD ["bash", "scripts/start.sh"]
+CMD ["python", "app/main.py"]
