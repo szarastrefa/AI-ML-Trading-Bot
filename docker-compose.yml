@@ -45,8 +45,8 @@ services:
       - ./data:/app/data
       - ./logs:/app/logs
       - ./config:/app/config:ro
-      - trading_models:/app/models
-      - trading_cache:/app/cache
+      - ./volumes/models:/app/models
+      - ./volumes/cache:/app/cache
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,14 +61,6 @@ services:
       timeout: 15s
       retries: 3
       start_period: 60s
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-          cpus: '1.5'
-        reservations:
-          memory: 1G
-          cpus: '0.5'
 
   # PostgreSQL Database - Optimized for Trading Data
   postgres:
@@ -82,7 +74,7 @@ services:
       - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./volumes/postgres:/var/lib/postgresql/data
       - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql
       - ./scripts/create_trading_tables.sql:/docker-entrypoint-initdb.d/02_trading_tables.sql
     ports:
@@ -95,12 +87,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
     command: [
       "postgres",
       "-c", "shared_preload_libraries=pg_stat_statements",
@@ -125,8 +111,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
-      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./volumes/redis:/data
     restart: unless-stopped
     networks:
       - trading-network
@@ -147,12 +132,6 @@ services:
       "--save", "300 10",
       "--save", "60 10000"
     ]
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 128M
 
   # Prometheus Monitoring
   prometheus:
@@ -163,8 +142,7 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./monitoring/rules:/etc/prometheus/rules:ro
-      - prometheus_data:/prometheus
+      - ./volumes/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -195,7 +173,7 @@ services:
       - GF_SMTP_ENABLED=false
       - GF_ANALYTICS_REPORTING_ENABLED=false
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./volumes/grafana:/var/lib/grafana
       - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
       - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
     restart: unless-stopped
@@ -219,7 +197,7 @@ services:
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data:ro
-      - jupyter_data:/home/jovyan/.jupyter
+      - ./volumes/jupyter:/home/jovyan/.jupyter
     restart: unless-stopped
     networks:
       - trading-network
@@ -238,7 +216,7 @@ services:
       - MINIO_ROOT_USER=minio_admin
       - MINIO_ROOT_PASSWORD=minio_secure_2025
     volumes:
-      - minio_data:/data
+      - ./volumes/minio:/data
     restart: unless-stopped
     networks:
       - trading-network
@@ -249,83 +227,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-
-  # Nginx Reverse Proxy (Optional)
-  nginx:
-    image: nginx:alpine
-    container_name: trading-nginx
-    hostname: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-    restart: unless-stopped
-    networks:
-      - trading-network
-    profiles: ["proxy"]
-    depends_on:
-      - trading-bot
-      - grafana
-
-# Persistent Volumes
-volumes:
-  postgres_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/postgres
-  
-  redis_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/redis
-  
-  trading_models:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/models
-  
-  trading_cache:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/cache
-  
-  prometheus_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/prometheus
-  
-  grafana_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/grafana
-  
-  jupyter_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/jupyter
-  
-  minio_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/minio
 
 # Networks
 networks:
