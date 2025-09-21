@@ -44,31 +44,31 @@ class MLConfig:
 
 class TradingBotConfig:
     """Główna konfiguracja Trading Bot"""
-    
+
     # Podstawowe ustawienia
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
     ENV: str = os.getenv("ENV", "development")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here")
-    
+
     # Ścieżki
     BASE_DIR = Path(__file__).parent.parent
     DATA_DIR = BASE_DIR / "data"
     LOGS_DIR = DATA_DIR / "logs"
     MODELS_DIR = DATA_DIR / "models"
-    
+
     # Serwer
     HOST: str = os.getenv("HOST", "0.0.0.0")
     PORT: int = int(os.getenv("PORT", "8000"))
-    
+
     # Baza danych
     DATABASE = DatabaseConfig()
-    
+
     # Zarządzanie ryzykiem
     RISK_MANAGEMENT = RiskManagementConfig()
-    
+
     # Machine Learning
     ML_CONFIG = MLConfig()
-    
+
     # Brokerzy obsługiwani przez system
     SUPPORTED_BROKERS = {
         "mt4": BrokerConfig(
@@ -124,7 +124,7 @@ class TradingBotConfig:
             api_url="https://api.fundedtradingplus.com"
         )
     }
-    
+
     # Strategie dostępne w systemie
     AVAILABLE_STRATEGIES = [
         "smart_money_concept",
@@ -132,7 +132,7 @@ class TradingBotConfig:
         "scalping_strategy",
         "ml_ensemble_strategy"
     ]
-    
+
     # Interwały czasowe
     TIMEFRAMES = {
         "1m": "1 minuta",
@@ -144,7 +144,7 @@ class TradingBotConfig:
         "1d": "1 dzień",
         "1w": "1 tydzień"
     }
-    
+
     @classmethod
     def create_directories(cls):
         """Tworzy potrzebne katalogi"""

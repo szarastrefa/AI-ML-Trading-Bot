@@ -30,25 +30,25 @@ class Signal:
 
 class BaseStrategy(ABC):
     """Bazowa klasa dla wszystkich strategii"""
-    
+
     def __init__(self, config: dict):
         self.config = config
         self.name = "base_strategy"
-        
+
     @abstractmethod
     def generate_signals(self, data: pd.DataFrame) -> List[Signal]:
         """Generuj sygnały tradingowe"""
         pass
-    
+
     @abstractmethod
     def calculate_position_size(self, account_balance: float, entry_price: float, stop_loss: float) -> float:
         """Oblicz wielkość pozycji"""
         pass
-    
+
     def validate_signal(self, signal: Signal, current_data: pd.DataFrame) -> bool:
         """Waliduj sygnał przed wykonaniem"""
         return True
-    
+
     @abstractmethod
     def get_strategy_info(self) -> Dict[str, Any]:
         """Zwróć informacje o strategii"""

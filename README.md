@@ -91,16 +91,6 @@ python -m app.main
 - `POST /api/v1/ml/models/train` - Trenuj modele
 - `GET /api/v1/ml/predictions` - Pobierz predykcje
 
-## 🧪 Testowanie
-
-```bash
-# Testy jednostkowe
-pytest tests/ -v
-
-# Backtest strategii
-python scripts/backtest_strategy.py --strategy fibonacci_team --symbol EURUSD --period 1y
-```
-
 ## ⚠️ Disclaimer
 
 **To oprogramowanie służy wyłącznie celom edukacyjnym. UŻYWAJ NA WŁASNE RYZYKO.**

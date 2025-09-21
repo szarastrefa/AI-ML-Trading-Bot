@@ -23,17 +23,17 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Zarządzanie cyklem życia aplikacji"""
-    
+
     # Startup
     logger.info("Starting AI/ML Trading Bot...")
-    
+
     # Utwórz katalogi
     config.create_directories()
     logger.info("Directories created")
-    
+
     logger.info("All services started successfully")
     yield
-    
+
     # Shutdown
     logger.info("Shutting down AI/ML Trading Bot...")
     logger.info("All services stopped")
