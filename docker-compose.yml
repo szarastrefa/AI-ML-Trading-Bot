@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  trading-bot:
+    build: .
+    container_name: ai_ml_trading_bot
+    ports:
+      - "8000:8000"  # FastAPI
+      - "8080:8080"  # Web UI
+    environment:
+      - ENV=production
+      - DEBUG=false
+      - DATABASE_URL=postgresql://trading:trading123@postgres:5432/trading_bot
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./logs:/app/data/logs
+      - trading_models:/app/data/models
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: trading_bot_postgres
+    environment:
+      - POSTGRES_DB=trading_bot
+      - POSTGRES_USER=trading
+      - POSTGRES_PASSWORD=trading123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: trading_bot_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  trading_models:
