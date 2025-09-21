@@ -1,4 +1,4 @@
-# AI/ML Trading Bot - Python 3.11 Optimized
+# AI/ML Trading Bot - Python 3.11 Optimized with pandas-ta-classic
 
 # Web Framework
 fastapi==0.104.1
@@ -23,7 +23,8 @@ tensorflow==2.15.0
 xgboost==2.0.3
 joblib==1.3.2
 
-# Technical Analysis - Python 3.11 Compatible
+# Technical Analysis - FIXED with pandas-ta-classic!
+pandas-ta-classic>=0.3.14  # Community maintained, Python 3.9-3.13 support, 150+ indicators
 backtrader==1.9.78.123
 TA-Lib==0.4.28
 
@@ -58,4 +59,3 @@ flake8==6.1.0
 
 # Compatibility
 typing-extensions>=4.8.0
-pandas-ta>=0.3.10  # Flexible version for Python 3.11
