@@ -1,5 +1,5 @@
-# AI/ML Trading Bot - Dockerfile
-FROM python:3.11-slim
+# AI/ML Trading Bot - Dockerfile (Python 3.9 for MetaTrader5 compatibility)
+FROM python:3.9-slim
 
 # Ustaw zmienne środowiskowe
 ENV PYTHONUNBUFFERED=1
@@ -24,7 +24,8 @@ RUN apt-get update && apt-get install -y \
 # Skopiuj pliki requirements
 COPY requirements.txt .
 
-# Zainstaluj zależności Python
+# Zaktualizuj pip i zainstaluj zależności Python
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Skopiuj kod aplikacji
@@ -42,4 +43,4 @@ RUN chmod +x scripts/*.py || true
 EXPOSE 8000 8080
 
 # Komenda startowa
-CMD ["python", "-m", "app.main"]
+CMD ["python", "app/main.py"]
