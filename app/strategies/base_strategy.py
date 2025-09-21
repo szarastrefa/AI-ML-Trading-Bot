@@ -1,55 +1,42 @@
 """
-Bazowa klasa dla wszystkich strategii tradingowych
+Base Strategy Class for AI/ML Trading Bot
 """
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 import pandas as pd
-from datetime import datetime
 
-class SignalType(Enum):
-    """Typy sygnałów"""
-    BUY = "buy"
-    SELL = "sell"
-    HOLD = "hold"
-    CLOSE_LONG = "close_long"
-    CLOSE_SHORT = "close_short"
-
-@dataclass
-class Signal:
-    """Sygnał tradingowy"""
-    timestamp: pd.Timestamp
-    signal_type: SignalType
-    confidence: float  # 0.0 - 1.0
-    entry_price: float
-    stop_loss: Optional[float] = None
-    take_profit: Optional[float] = None
-    metadata: Dict[str, Any] = None
 
 class BaseStrategy(ABC):
-    """Bazowa klasa dla wszystkich strategii"""
-
-    def __init__(self, config: dict):
+    """
+    Abstract base class for trading strategies
+    """
+    
+    def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.name = "base_strategy"
-
+        self.name = "BaseStrategy"
+        self.version = "1.0.0"
+    
     @abstractmethod
-    def generate_signals(self, data: pd.DataFrame) -> List[Signal]:
-        """Generuj sygnały tradingowe"""
+    async def analyze(self, symbol: str, timeframe: str = "H1", limit: int = 500) -> Dict[str, Any]:
+        """
+        Analyze market data and generate trading signal
+        
+        Args:
+            symbol: Trading symbol (e.g., 'EURUSD', 'BTCUSDT')
+            timeframe: Chart timeframe
+            limit: Number of candles to analyze
+            
+        Returns:
+            Trading signal with analysis
+        """
         pass
-
-    @abstractmethod
-    def calculate_position_size(self, account_balance: float, entry_price: float, stop_loss: float) -> float:
-        """Oblicz wielkość pozycji"""
-        pass
-
-    def validate_signal(self, signal: Signal, current_data: pd.DataFrame) -> bool:
-        """Waliduj sygnał przed wykonaniem"""
-        return True
-
-    @abstractmethod
-    def get_strategy_info(self) -> Dict[str, Any]:
-        """Zwróć informacje o strategii"""
-        pass
+    
+    def get_performance_stats(self) -> Dict[str, Any]:
+        """Get strategy performance statistics"""
+        return {
+            "name": self.name,
+            "version": self.version,
+            "total_signals": 0,
+            "win_rate": 0.0
+        }

@@ -1,27 +1,32 @@
 #!/bin/bash
 
-# AI/ML Trading Bot - Startup Script
+# AI/ML Trading Bot v2.0.1 - Fixed Startup Script
+set -e
 
-echo "Starting AI/ML Trading Bot..."
+echo "🚀 Starting AI/ML Trading Bot v2.0.1 (Fixed Version)..."
 
-# Wait for database
-echo "Waiting for database connection..."
-while ! nc -z postgres 5432; do
-  sleep 0.1
-done
-echo "Database connected!"
+# Set environment variables
+export PYTHONUNBUFFERED=1
+export PYTHONDONTWRITEBYTECODE=1
 
-# Wait for Redis
-echo "Waiting for Redis connection..."
-while ! nc -z redis 6379; do
-  sleep 0.1
-done
-echo "Redis connected!"
+# Create directories
+mkdir -p data/{logs,models,historical,backtest,live,cache}
+mkdir -p logs
 
-# Initialize database
-echo "Initializing database..."
-python scripts/init_db.py
+# Test imports
+echo "🔍 Testing critical imports..."
+python -c "
+import pandas_ta as ta
+import tensorflow as tf
+import pandas as pd
+import numpy as np
+print(f'✅ pandas_ta: {getattr(ta, \"version\", \"stable\")}')
+print(f'✅ TensorFlow: {tf.__version__}')
+print(f'✅ pandas: {pd.__version__}')
+print(f'✅ numpy: {np.__version__}')
+print('✅ All dependencies working!')
+"
 
-# Start the application
-echo "Starting FastAPI application..."
-python app/main.py
+echo "🐍 Starting Python application..."
+cd /app
+exec python app/main.py
