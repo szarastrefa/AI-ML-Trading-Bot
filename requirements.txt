@@ -13,8 +13,6 @@ redis==5.0.1
 
 # Trading APIs - FIXED VERSIONS
 ccxt==4.1.48
-# MetaTrader5 - use flexible version for compatibility
-MetaTrader5>=5.0.37
 python-binance==1.0.19
 
 # Machine Learning - Python 3.9 compatible
