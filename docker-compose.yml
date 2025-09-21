@@ -12,6 +12,8 @@ services:
       - DEBUG=false
       - DATABASE_URL=postgresql://trading:trading123@postgres:5432/trading_bot
       - REDIS_URL=redis://redis:6379/0
+      - PYTHONPATH=/app
+      - PYTHON_VERSION=3.10
     volumes:
       - ./data:/app/data
       - ./config:/app/config
@@ -21,11 +23,17 @@ services:
       - postgres
       - redis
     restart: unless-stopped
+    command: ["/bin/bash", "/app/scripts/start.sh"]
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   postgres:
     image: postgres:15-alpine
@@ -36,10 +44,14 @@ services:
       - POSTGRES_PASSWORD=trading123
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trading -d trading_bot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -48,8 +60,13 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes --maxmemory 256mb
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
