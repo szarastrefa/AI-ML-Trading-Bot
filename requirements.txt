@@ -1,36 +1,52 @@
-# AI/ML Trading Bot - MINIMAL STABLE VERSION
-# Only rock-solid dependencies without conflicts
-# NO pandas-ta or pandas-ta-classic - they don't exist or conflict!
+# AI/ML Trading Bot v2.1 - RESEARCH-BASED COMPATIBLE VERSIONS
+# Based on comprehensive library compatibility analysis
 
-# Web Framework
+# Web Framework - Tested stable versions
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-pydantic==2.5.0
+pydantic==2.5.0  # Compatible with FastAPI 0.104.1
 python-multipart==0.0.6
 
-# Database
+# Database - Stable versions  
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 redis==5.0.1
 
-# Trading APIs
+# Trading APIs - Latest compatible
 ccxt==4.1.48
+python-binance==1.0.19
 
-# Core Data Science - STABLE VERSIONS
-pandas==2.1.4
-numpy==1.25.2
-scikit-learn==1.3.2
+# Core Data Science - CRITICAL VERSION CONSTRAINTS
+# Research: NumPy 1.25.2 supports Python 3.9-3.11, avoid 2.0+ breaking changes
+numpy==1.25.2  # Critical: Pre-2.0 for TA-Lib compatibility
+pandas==2.0.3  # Compatible with NumPy 1.25.2
 
-# Technical Analysis - ONLY TA-LIB (most stable, 150+ indicators)
+# Machine Learning - Conservative stable versions
+scikit-learn==1.3.2  # Compatible with NumPy 1.25.2
+joblib==1.3.2
+
+# Technical Analysis - ONLY TA-Lib (most stable)
+# Research: TA-Lib 0.4.28 works with NumPy 1.25.2 + Python 3.10
 TA-Lib==0.4.28
 
-# Core Utils
+# Visualization - Stable versions
+matplotlib==3.7.2  # Compatible with NumPy 1.25.2
+plotly==5.15.0
+
+# Core Utilities - Minimal stable versions
 python-dotenv==1.0.0
 pyyaml==6.0.1
 requests==2.31.0
 loguru==0.7.2
 
-# Development
+# Networking - Conservative versions
+websockets==11.0.3  # Avoid 12.0+ for stability
+aiohttp==3.8.5     # Stable version
+
+# Scheduling
+APScheduler==3.10.4
+
+# Development tools
 pytest==7.4.3
-black==23.11.0
-flake8==6.1.0
+black==23.7.0
+flake8==6.0.0
