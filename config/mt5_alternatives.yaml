@@ -1,0 +1,108 @@
+# MetaTrader5 Alternatives Configuration
+# MetaTrader5 Python package działa tylko na Windows
+# Ta konfiguracja definiuje alternatywne rozwiązania dla Linux/Docker
+
+mt5_alternatives:
+  zeromq_bridge:
+    enabled: true
+    host: "localhost"
+    port: 5555
+    timeout: 5000
+    description: "ZeroMQ bridge for MT5 communication"
+    setup_instructions: |
+      1. Zainstaluj ZeroMQ bridge w MT5 (Windows)
+      2. Skonfiguruj bridge do nasłuchiwania na porcie 5555
+      3. Bot może komunikować się z MT5 przez ZeroMQ
+  
+  rest_api_bridge:
+    enabled: false
+    url: "http://localhost:8001"
+    api_key: ""
+    timeout: 10
+    description: "REST API bridge for MT5"
+    setup_instructions: |
+      1. Zainstaluj REST API server w MT5 (Windows)
+      2. Skonfiguruj endpoint HTTP API
+      3. Bot komunikuje się przez HTTP requests
+    
+  mt5_web_api:
+    enabled: false
+    url: "https://api.metatrader5.com"
+    login: ""
+    password: ""
+    server: ""
+    description: "MT5 Web API (jeśli dostępne)"
+
+# Alternative Trading Platforms (Linux compatible)
+alternative_brokers:
+  demo_accounts:
+    roboforex:
+      server: "RoboForex-Demo"
+      enabled: true
+      api_type: "REST"
+      
+    xm_group:
+      server: "XMGlobal-Demo" 
+      enabled: true
+      api_type: "REST"
+      
+    fxopen:
+      server: "FXOpen-Demo"
+      enabled: true
+      api_type: "REST"
+      
+  crypto_exchanges:
+    binance:
+      enabled: true
+      testnet: true
+      api_key: ""
+      api_secret: ""
+      
+    bybit:
+      enabled: true
+      testnet: true
+      api_key: ""
+      api_secret: ""
+
+# Trading Configuration
+trading_config:
+  default_broker: "roboforex"  # Fallback gdy MT5 niedostępny
+  risk_management:
+    max_risk_per_trade: 0.02  # 2%
+    stop_loss_pct: 0.02       # 2%
+    take_profit_ratio: 2.0    # 1:2
+    
+  instruments:
+    forex_pairs: ["EURUSD", "GBPUSD", "USDJPY", "USDCHF"]
+    crypto_pairs: ["BTCUSDT", "ETHUSDT", "ADAUSDT"]
+    
+# Instructions
+instructions: |
+  UWAGA: MetaTrader5 Python package działa tylko na Windows!
+  
+  Dla Linux/Docker użyj jednej z opcji:
+  
+  1. 🌉 ZeroMQ Bridge (Zalecane)
+     - Najszybsze połączenie
+     - Real-time data
+     - Wymaga MT5 na Windows + ZMQ bridge
+     
+  2. 🌐 REST API Bridge
+     - HTTP API
+     - Łatwiejsze w konfiguracji
+     - Wymaga MT5 na Windows + REST server
+     
+  3. 💱 Alternative Brokers
+     - RoboForex, XM Group, FXOpen
+     - Natywne API Linux
+     - Demo accounts dostępne
+     
+  4. ₿ Crypto Exchanges
+     - Binance, Bybit
+     - Pełne wsparcie Linux
+     - Testnet do testów
+     
+  5. 💻 Windows Container (zaawansowane)
+     - Docker Windows container
+     - Pełna kompatybilność MT5
+     - Wymaga Windows Docker host
