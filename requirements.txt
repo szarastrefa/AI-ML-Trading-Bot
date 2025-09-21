@@ -1,6 +1,6 @@
-# AI/ML Trading Bot - Python 3.11 Compatible (Fixed)
+# AI/ML Trading Bot - Python 3.10 Compatible (Konflikty zależności rozwiązane)
 
-# Web Framework
+# Web Framework - kompatybilne wersje
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
@@ -11,26 +11,28 @@ sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 redis==5.0.1
 
-# Trading APIs (Linux compatible - bez MetaTrader5 i pandas-ta)
+# Trading APIs - Linux compatible
 ccxt==4.1.48
 python-binance==1.0.19
 
-# Machine Learning - Python 3.11 Compatible
-pandas==2.1.3
-numpy==1.24.3
+# Machine Learning - wersje bez konfliktów typing-extensions
+pandas==2.1.4
+numpy==1.24.4
 scikit-learn==1.3.2
-tensorflow==2.13.0
-xgboost==1.7.6
+tensorflow==2.14.0  # Nowsza wersja bez konfliktów
+xgboost==2.0.3
 joblib==1.3.2
 
-# Technical Analysis - tylko kompatybilne
+# Technical Analysis - Python 3.10 compatible
+pandas-ta==0.3.14b0  # Przywracamy - działa z Python 3.10
 backtrader==1.9.78.123
-# pandas-ta==0.3.14b0 REMOVED - causes Python version conflicts
+TA-Lib==0.4.28
 
 # Data Processing
 scipy==1.11.4
-matplotlib==3.7.2
-plotly==5.15.0
+matplotlib==3.8.2
+seaborn==0.13.0
+plotly==5.17.0
 
 # Web Framework Support
 jinja2==3.1.2
@@ -38,7 +40,7 @@ aiofiles==23.2.1
 
 # HTTP Clients
 requests==2.31.0
-httpx==0.24.1
+httpx==0.25.2
 
 # Configuration
 python-dotenv==1.0.0
@@ -48,7 +50,7 @@ pyyaml==6.0.1
 loguru==0.7.2
 
 # WebSocket Support
-websockets==11.0.3
+websockets==12.0
 
 # Scheduling
 APScheduler==3.10.4
@@ -58,5 +60,8 @@ pytest==7.4.3
 pytest-asyncio==0.21.1
 
 # Development
-black==23.7.0
-flake8==6.0.0
+black==23.11.0
+flake8==6.1.0
+
+# Fix dla konfliktów zależności
+typing-extensions==4.8.0
