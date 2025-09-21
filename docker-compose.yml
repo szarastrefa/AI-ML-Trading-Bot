@@ -1,242 +1,315 @@
-# AI/ML Trading Bot v2.0 - Complete Stack with pandas-ta-classic
+# AI/ML Trading Bot v2.1 - Research-Based Stable Configuration
+# Optimized for Python 3.10 + TA-Lib + NumPy 1.25.2 compatibility
 version: '3.8'
 
 services:
-  # Main Trading Bot Application
+  # Main Trading Bot (Research-Optimized for Maximum Stability)
   trading-bot:
-    build: .
-    container_name: ai-ml-trading-bot-v2
-    hostname: trading-bot
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-trading-bot-v2.1-stable
+    hostname: trading-bot-stable
     ports:
-      - "8000:8000"  # FastAPI
-      - "8080:8080"  # Web Dashboard
+      - "8000:8000"  # FastAPI main API
+      - "8080:8080"  # Optional dashboard/admin
     environment:
-      # Python Configuration
+      # Python optimizations (Research-based)
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      - NUMBA_CACHE_DIR=/tmp/numba_cache
+      - PYTHONHASHSEED=random
       
-      # Application Settings
+      # Application settings
       - DEBUG=True
+      - ENV=development
       - LOG_LEVEL=INFO
       - WORKERS=1
       
-      # Database Configuration
+      # Database connections
       - POSTGRES_HOST=postgres
-      - POSTGRES_DB=trading_bot_v2
+      - POSTGRES_DB=trading_bot_v2_1
       - POSTGRES_USER=trading_bot
-      - POSTGRES_PASSWORD=trading_bot_secure_2025
+      - POSTGRES_PASSWORD=trading_bot_secure_v2_1
       
-      # Redis Configuration
+      # Redis configuration
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
       
-      # Trading Configuration
-      - DEFAULT_STRATEGY=pandas_ta_classic_v2
-      - DEFAULT_BROKER=roboforex
+      # Research-based optimizations for TA-Lib + NumPy compatibility
+      - TA_LIB_UNSTABLE_PERIOD=200
+      - NUMPY_EXPERIMENTAL_ARRAY_FUNCTION=0
+      - PANDAS_COPY_ON_WRITE=1
+      - NUMBA_CACHE_DIR=/tmp/numba_cache
+      
+      # Trading configuration
+      - DEFAULT_STRATEGY=talib_stable_v2_1
       - RISK_PER_TRADE=0.02
       - MAX_POSITIONS=3
-      
-      # ML Configuration
-      - TENSORFLOW_VERSION=2.15.0
-      - PANDAS_TA_CLASSIC=True
+    
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
       - ./config:/app/config:ro
-      - ./volumes/models:/app/models
-      - ./volumes/cache:/app/cache
+      - trading_models:/app/models
+      - trading_cache:/app/tmp
+    
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    
     restart: unless-stopped
     networks:
-      - trading-network
+      - trading-network-v2-1
+    
+    # Enhanced health check for research-validated stability
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
-      timeout: 15s
-      retries: 3
-      start_period: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s  # Extra time for TA-Lib compilation and initialization
+    
+    # Resource limits for stability
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    
+    # Enhanced logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+        labels: "service=trading-bot,version=2.1"
 
-  # PostgreSQL Database - Optimized for Trading Data
+  # PostgreSQL Database (Research-Optimized)
   postgres:
-    image: postgres:15-alpine
-    container_name: trading-postgres-v2
-    hostname: postgres
+    image: postgres:14-alpine  # Stable, well-tested version per research
+    container_name: trading-postgres-v2-1
+    hostname: postgres-stable
     environment:
-      - POSTGRES_DB=trading_bot_v2
+      - POSTGRES_DB=trading_bot_v2_1
       - POSTGRES_USER=trading_bot
-      - POSTGRES_PASSWORD=trading_bot_secure_2025
-      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+      - POSTGRES_PASSWORD=trading_bot_secure_v2_1
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
       - PGDATA=/var/lib/postgresql/data/pgdata
+      
+      # Performance optimizations based on research
+      - POSTGRES_SHARED_PRELOAD_LIBRARIES=pg_stat_statements
+      - POSTGRES_MAX_CONNECTIONS=100
+      - POSTGRES_SHARED_BUFFERS=256MB
+      - POSTGRES_EFFECTIVE_CACHE_SIZE=1GB
+    
     volumes:
-      - ./volumes/postgres:/var/lib/postgresql/data
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql
-      - ./scripts/create_trading_tables.sql:/docker-entrypoint-initdb.d/02_trading_tables.sql
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./scripts/create-tables.sql:/docker-entrypoint-initdb.d/02-tables.sql:ro
+    
     ports:
       - "5432:5432"
+    
     restart: unless-stopped
     networks:
-      - trading-network
+      - trading-network-v2-1
+    
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U trading_bot -d trading_bot_v2"]
+      test: ["CMD-SHELL", "pg_isready -U trading_bot -d trading_bot_v2_1"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
+    
+    # Performance tuning for trading data
     command: [
       "postgres",
-      "-c", "shared_preload_libraries=pg_stat_statements",
-      "-c", "pg_stat_statements.track=all",
       "-c", "max_connections=100",
       "-c", "shared_buffers=256MB",
       "-c", "effective_cache_size=1GB",
-      "-c", "work_mem=4MB",
       "-c", "maintenance_work_mem=64MB",
-      "-c", "random_page_cost=1.1",
-      "-c", "effective_io_concurrency=200",
       "-c", "checkpoint_completion_target=0.9",
       "-c", "wal_buffers=16MB",
-      "-c", "default_statistics_target=100"
+      "-c", "default_statistics_target=100",
+      "-c", "random_page_cost=1.1",
+      "-c", "effective_io_concurrency=200",
+      "-c", "work_mem=4MB",
+      "-c", "shared_preload_libraries=pg_stat_statements"
     ]
 
-  # Redis Cache & Message Broker - Optimized for Trading
+  # Redis Cache (Optimized for Trading Data)
   redis:
     image: redis:7-alpine
-    container_name: trading-redis-v2
-    hostname: redis
+    container_name: trading-redis-v2-1
+    hostname: redis-stable
     ports:
       - "6379:6379"
+    
     volumes:
-      - ./volumes/redis:/data
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    
     restart: unless-stopped
     networks:
-      - trading-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - trading-network-v2-1
+    
+    # Research-optimized Redis configuration for trading
     command: [
       "redis-server",
       "--appendonly", "yes",
+      "--appendfsync", "everysec",
       "--maxmemory", "512mb",
       "--maxmemory-policy", "allkeys-lru",
-      "--tcp-keepalive", "60",
-      "--timeout", "300",
-      "--databases", "16",
-      "--save", "900 1",
-      "--save", "300 10",
-      "--save", "60 10000"
+      "--save", "900", "1",
+      "--save", "300", "10",
+      "--save", "60", "10000",
+      "--tcp-keepalive", "300",
+      "--timeout", "0",
+      "--databases", "16"
     ]
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    
+    # Security and performance
+    sysctls:
+      - net.core.somaxconn=511
 
-  # Prometheus Monitoring
-  prometheus:
-    image: prom/prometheus:v2.47.0
-    container_name: trading-prometheus
-    hostname: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./volumes/prometheus:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--web.enable-lifecycle'
-      - '--storage.tsdb.retention.time=30d'
-      - '--storage.tsdb.retention.size=10GB'
-    restart: unless-stopped
-    networks:
-      - trading-network
-    profiles: ["monitoring"]
-    depends_on:
-      - trading-bot
-
-  # Grafana Dashboard
+  # Optional: Grafana for monitoring (Research-compatible)
   grafana:
     image: grafana/grafana:10.1.0
-    container_name: trading-grafana
-    hostname: grafana
+    container_name: trading-grafana-v2-1
+    hostname: grafana-monitoring
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=trading_admin_2025
+      - GF_SECURITY_ADMIN_PASSWORD=admin_secure_v2_1
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_DOMAIN=localhost
-      - GF_SMTP_ENABLED=false
       - GF_ANALYTICS_REPORTING_ENABLED=false
     volumes:
-      - ./volumes/grafana:/var/lib/grafana
-      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
-      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
-    restart: unless-stopped
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/datasources:/etc/grafana/provisioning/datasources:ro
     networks:
-      - trading-network
-    profiles: ["monitoring"]
-    depends_on:
-      - prometheus
+      - trading-network-v2-1
+    restart: unless-stopped
+    profiles:
+      - monitoring
     user: "472"
 
-  # Jupyter Notebook for Analysis & Development
+  # Optional: Prometheus for metrics (Research-compatible)
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: trading-prometheus-v2-1
+    hostname: prometheus-metrics
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.size=5GB'
+      - '--web.enable-lifecycle'
+    networks:
+      - trading-network-v2-1
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # Optional: Jupyter for development (Research-compatible)
   jupyter:
-    image: jupyter/tensorflow-notebook:python-3.11
-    container_name: trading-jupyter
-    hostname: jupyter
+    image: jupyter/tensorflow-notebook:python-3.10  # Match main Python version
+    container_name: trading-jupyter-v2-1
+    hostname: jupyter-dev
     ports:
       - "8888:8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - JUPYTER_TOKEN=trading_jupyter_2025
+      - JUPYTER_TOKEN=research_notebook_v2_1
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data:ro
-      - ./volumes/jupyter:/home/jovyan/.jupyter
+      - jupyter_data:/home/jovyan/.jupyter
     restart: unless-stopped
     networks:
-      - trading-network
-    profiles: ["development"]
-    command: start-notebook.sh --NotebookApp.token='trading_jupyter_2025' --NotebookApp.password=''
+      - trading-network-v2-1
+    profiles:
+      - development
+    command: start-notebook.sh --NotebookApp.token='research_notebook_v2_1' --NotebookApp.password=''
 
-  # MinIO Object Storage for ML Models & Data
-  minio:
-    image: minio/minio:latest
-    container_name: trading-minio
-    hostname: minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      - MINIO_ROOT_USER=minio_admin
-      - MINIO_ROOT_PASSWORD=minio_secure_2025
-    volumes:
-      - ./volumes/minio:/data
-    restart: unless-stopped
-    networks:
-      - trading-network
-    profiles: ["storage"]
-    command: server /data --console-address ":9001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
+# Named volumes for data persistence (Research-optimized)
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres
+  
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+  
+  trading_models:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/models
+  
+  trading_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/cache
+  
+  grafana_data:
+    driver: local
+  
+  prometheus_data:
+    driver: local
+  
+  jupyter_data:
+    driver: local
 
-# Networks
+# Research-optimized network configuration
 networks:
-  trading-network:
+  trading-network-v2-1:
     driver: bridge
-    name: ai-trading-network-v2
+    name: ai-trading-network-v2-1-stable
     ipam:
       driver: default
       config:
-        - subnet: 172.25.0.0/16
-          gateway: 172.25.0.1
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
     driver_opts:
-      com.docker.network.bridge.name: ai-trading-br0
+      com.docker.network.bridge.name: ai-trading-br-v2-1
+      com.docker.network.driver.mtu: 1500
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+
+# Usage Instructions:
+# Basic startup: docker-compose up -d
+# With monitoring: docker-compose --profile monitoring up -d  
+# With development: docker-compose --profile development up -d
+# Full stack: docker-compose --profile monitoring --profile development up -d
