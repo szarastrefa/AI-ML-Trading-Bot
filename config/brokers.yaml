@@ -1,0 +1,70 @@
+# Konfiguracja brokerów
+brokers:
+  mt5:
+    enabled: true
+    server: "MetaQuotes-Demo"
+    login: ""
+    password: ""
+    path: "/opt/mt5/terminal64.exe"
+  
+  roboforex:
+    enabled: true
+    server: "RoboForex-Demo"
+    login: ""
+    password: ""
+  
+  sabiotrade:
+    enabled: true
+    api_key: ""
+    api_secret: ""
+    sandbox: true
+  
+  xm_group:
+    enabled: true
+    server: "XMGlobal-Demo"
+    login: ""
+    password: ""
+  
+  forexchief:
+    enabled: true
+    server: "ForexChief-Demo"
+    login: ""
+    password: ""
+  
+  fxopen:
+    enabled: true
+    server: "FXOpen-Demo"
+    login: ""
+    password: ""
+  
+  instaforex:
+    enabled: true
+    server: "InstaForex-Demo"
+    login: ""
+    password: ""
+  
+  templerfx:
+    enabled: true
+    api_key: ""
+    api_secret: ""
+  
+  fbs:
+    enabled: true
+    server: "FBS-Demo"
+    login: ""
+    password: ""
+  
+  pocket_option:
+    enabled: true
+    api_key: ""
+    demo: true
+  
+  the5ers:
+    enabled: true
+    api_key: ""
+    sandbox: true
+  
+  funded_trading_plus:
+    enabled: true
+    api_key: ""
+    sandbox: true

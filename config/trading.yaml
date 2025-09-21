@@ -1,0 +1,49 @@
+# Parametry tradingowe
+trading:
+  # Zarządzanie ryzykiem
+  risk_management:
+    max_risk_per_trade: 0.02  # 2% kapitału na transakcję
+    stop_loss_pct: 0.02       # 2% stop loss
+    take_profit_ratio: 2.0    # Risk/Reward 1:2
+    max_daily_loss: 0.06      # 6% max strata dzienna
+    max_drawdown: 0.20        # 20% max drawdown
+  
+  # Strategie
+  strategies:
+    smart_money_concept:
+      enabled: true
+      timeframes: ["M15", "H1", "H4"]
+      min_liquidity_sweep: 10
+      order_block_threshold: 0.5
+      fair_value_gap_min: 5
+    
+    fibonacci_team:
+      enabled: true
+      timeframes: ["M5", "M15", "H1"]
+      retracement_levels: [0.236, 0.382, 0.5, 0.618, 0.786]
+      extension_levels: [0.618, 1.0, 1.618, 2.618]
+      harmonic_patterns: ["gartley", "bat", "butterfly", "crab"]
+      scalping_sessions: ["london", "newyork"]
+  
+  # Pary walutowe
+  instruments:
+    major_pairs: ["EURUSD", "GBPUSD", "USDJPY", "USDCHF", "AUDUSD", "USDCAD", "NZDUSD"]
+    minor_pairs: ["EURGBP", "EURJPY", "GBPJPY", "AUDJPY"]
+    exotic_pairs: ["USDPLN", "EURPLN", "GBPPLN"]
+  
+  # Sesje tradingowe  
+  trading_sessions:
+    london:
+      start: "08:00"
+      end: "17:00"
+      timezone: "Europe/London"
+    
+    newyork:
+      start: "13:00" 
+      end: "22:00"
+      timezone: "America/New_York"
+    
+    tokyo:
+      start: "00:00"
+      end: "09:00"
+      timezone: "Asia/Tokyo"

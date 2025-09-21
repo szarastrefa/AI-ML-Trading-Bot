@@ -1,0 +1,78 @@
+# Konfiguracja modeli ML
+ml_models:
+  # RandomForest
+  random_forest:
+    enabled: true
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 2
+    min_samples_leaf: 1
+    random_state: 42
+    
+  # LSTM Neural Network
+  lstm:
+    enabled: true
+    sequence_length: 60
+    layers:
+      - units: 50
+        dropout: 0.2
+        return_sequences: true
+      - units: 50
+        dropout: 0.2
+        return_sequences: true
+      - units: 50
+        dropout: 0.2
+        return_sequences: false
+    dense_units: 25
+    epochs: 50
+    batch_size: 32
+    validation_split: 0.2
+    
+  # XGBoost
+  xgboost:
+    enabled: true
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+    
+  # Online Learning
+  online_learning:
+    enabled: true
+    learning_rate: 0.01
+    batch_size: 32
+    update_frequency: "1h"  # co godzinę
+    
+  # Feature Engineering
+  features:
+    technical_indicators:
+      - "sma_20"
+      - "sma_50"
+      - "rsi_14"
+      - "macd"
+      - "bollinger_bands"
+      - "stochastic"
+      - "williams_r"
+      - "cci"
+    
+    price_features:
+      - "open"
+      - "high"
+      - "low"
+      - "close"
+      - "volume"
+      
+    custom_features:
+      - "fibonacci_levels"
+      - "order_blocks"
+      - "liquidity_levels"
+      - "fair_value_gaps"
+      
+  # Model persistence
+  model_storage:
+    path: "/app/models"
+    format: "pickle"
+    versioning: true
+    auto_backup: true
