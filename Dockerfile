@@ -1,15 +1,13 @@
-# AI/ML Trading Bot - Python 3.10 dla optymalnej kompatybilności
-FROM python:3.10-slim
+# AI/ML Trading Bot - Python 3.11 dla najlepszej wydajności
+FROM python:3.11-slim
 
-# Ustaw zmienne środowiskowe
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Ustaw katalog roboczy
 WORKDIR /app
 
-# Zainstaluj systemowe zależności
+# Install system dependencies 
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -21,29 +19,25 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libssl-dev \
     libffi-dev \
-    pkg-config \
+    libta-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Skopiuj pliki requirements
+# Copy requirements and install Python packages
 COPY requirements.txt .
-
-# Zaktualizuj pip i zainstaluj zależności Python
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Skopiuj kod aplikacji
+# Copy application code
 COPY app/ ./app/
 COPY config/ ./config/
 COPY scripts/ ./scripts/
 
-# Stwórz katalogi danych
+# Create data directories
 RUN mkdir -p data/logs data/models data/historical data/backtest
 
-# Ustaw uprawnienia
-RUN chmod +x scripts/*.py || true
+# Set permissions
+RUN chmod +x scripts/*.py scripts/*.sh || true
 
-# Expuj porty
 EXPOSE 8000 8080
 
-# Komenda startowa
-CMD ["python", "app/main.py"]
+CMD ["bash", "scripts/start.sh"]
