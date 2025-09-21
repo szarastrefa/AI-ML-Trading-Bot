@@ -1,16 +1,13 @@
-# AI/ML Trading Bot - Python 3.11 + pandas-ta-classic Complete Stack
+# AI/ML Trading Bot - Working Version
 
 # Web Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
 python-multipart==0.0.6
-jinja2==3.1.2
-aiofiles==23.2.1
 
 # Database
 sqlalchemy==2.0.23
-alembic==1.12.1
 psycopg2-binary==2.9.9
 redis==5.0.1
 
@@ -18,7 +15,7 @@ redis==5.0.1
 ccxt==4.1.48
 python-binance==1.0.19
 
-# Machine Learning - Python 3.11 Optimized
+# Machine Learning
 pandas==2.1.4
 numpy==1.25.2
 scikit-learn==1.3.2
@@ -26,67 +23,30 @@ tensorflow==2.15.0
 xgboost==2.0.3
 joblib==1.3.2
 
-# Technical Analysis - MODERNIZED STACK
-pandas-ta-classic>=1.0.0  # Community maintained, 150+ indicators, Python 3.9-3.13
-TA-Lib==0.4.28             # Compiled from source in Dockerfile
+# Technical Analysis - FIXED VERSION
+pandas-ta-classic==0.3.14b2
+TA-Lib==0.4.28
 backtrader==1.9.78.123
-vectorbt>=0.25.2           # Advanced backtesting framework
 
-# Financial Data Sources
-yfinance>=0.2.25           # Yahoo Finance
-alpha-vantage>=2.3.1       # Alpha Vantage API
-quandl>=3.7.0              # Quandl financial data
-
-# Visualization & Charting
+# Visualization
 matplotlib==3.8.2
-seaborn==0.13.0
 plotly==5.17.0
-mplfinance>=0.12.10        # Financial candlestick charts
-bokeh>=3.3.0               # Interactive plotting
-
-# WebSocket & HTTP
-websockets==12.0
-requests==2.31.0
-httpx==0.25.2
-aiohttp>=3.9.0
-
-# Configuration & Environment
-python-dotenv==1.0.0
-pyyaml==6.0.1
-typing-extensions>=4.8.0
-
-# Logging & Monitoring
-loguru==0.7.2
-prometheus-client>=0.19.0  # Metrics collection
-
-# Task Scheduling
-APScheduler==3.10.4
-celery[redis]>=5.3.0       # Distributed task queue
-
-# Performance Optimization
-numba>=0.58.0              # JIT compilation for numerical functions
-cython>=3.0.0              # C extensions for speed
 
 # Utilities
-arrow>=1.3.0               # Better datetime handling
-click>=8.1.7               # CLI interface
-tqdm>=4.66.0               # Progress bars
+python-dotenv==1.0.0
+pyyaml==6.0.1
+requests==2.31.0
+loguru==0.7.2
+websockets==12.0
+aiohttp>=3.9.0
+
+# Scheduling
+APScheduler==3.10.4
 
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
-pytest-cov>=4.1.0
 
-# Development Tools
+# Development
 black==23.11.0
 flake8==6.1.0
-mypy>=1.7.0
-isort>=5.12.0
-
-# Security
-cryptography>=41.0.0
-pyjwt>=2.8.0
-
-# Data Validation
-cerberus>=1.3.4
-marshmallow>=3.20.0
