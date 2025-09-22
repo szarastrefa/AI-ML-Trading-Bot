@@ -1,51 +1,22 @@
-# AI/ML Trading Bot v2.1 - TA-LIB COMPATIBLE VERSIONS
-# CRITICAL: TA-Lib 0.4.28 requires NumPy < 2.0 for compilation
+# AI/ML Trading Bot v3.0 - Professional Web GUI Requirements
+# Minimal dependencies for stable operation
 
-# Web Framework - Stable versions
+# Core Web Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
-python-multipart==0.0.6
 
-# Database - Stable versions  
-sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
-redis==5.0.1
+# Data Science - Minimal for GUI
+numpy==1.25.2
+pandas==2.0.3
 
-# Trading APIs - Latest compatible
-ccxt==4.1.48
-python-binance==1.0.19
+# Optional ML (for advanced features)
+scikit-learn==1.3.2
 
-# Core Data Science - CRITICAL VERSION CONSTRAINTS
-# Research: NumPy 1.24.4 is last version fully compatible with TA-Lib 0.4.28
-numpy==1.24.4  # CRITICAL: Pre-2.0 for TA-Lib compatibility
-pandas==2.0.3  # Compatible with NumPy 1.24.4
-
-# Machine Learning - Conservative stable versions
-scikit-learn==1.3.2  # Compatible with NumPy 1.24.4
-joblib==1.3.2
-
-# Technical Analysis - TA-Lib (installed via conda in Dockerfile)
-# Note: TA-Lib will be installed separately using conda-forge for reliability
-
-# Visualization - Stable versions
-matplotlib==3.7.2  # Compatible with NumPy 1.24.4
-plotly==5.15.0
-
-# Core Utilities - Minimal stable versions
-python-dotenv==1.0.0
-pyyaml==6.0.1
+# Core Utilities
 requests==2.31.0
-loguru==0.7.2
+python-dotenv==1.0.0
 
-# Networking - Conservative versions
-websockets==11.0.3  # Avoid 12.0+ for stability
-aiohttp==3.8.5     # Stable version
-
-# Scheduling
-APScheduler==3.10.4
-
-# Development tools
+# Development (optional)
 pytest==7.4.3
 black==23.7.0
-flake8==6.0.0
