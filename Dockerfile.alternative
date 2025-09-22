@@ -1,0 +1,67 @@
+# AI/ML Trading Bot v2.1 - ALTERNATIVE: Pre-compiled TA-Lib wheel approach
+# Backup solution if conda approach fails
+FROM python:3.10-slim-bullseye
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+# Install minimal system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install specific NumPy version first (critical for TA-Lib compatibility)
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install numpy==1.24.4
+
+# Install pre-compiled TA-Lib wheel (avoids compilation issues)
+# Using MrJbdu4/ta-lib-python which provides reliable wheels
+RUN pip install --find-links https://github.com/MrJbdu4/ta-lib-python/releases/latest/download/ TA-Lib
+
+# Alternative: Try cgohlke's wheels if above fails
+# RUN pip install https://github.com/cgohlke/talib-build/releases/download/v0.4.28/TA_Lib-0.4.28-cp310-cp310-linux_x86_64.whl
+
+# Copy requirements (without TA-Lib and NumPy as they're already installed)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY app/ ./app/
+COPY config/ ./config/
+COPY scripts/ ./scripts/
+
+# Create directories
+RUN mkdir -p \
+    data/logs \
+    data/models \
+    data/historical \
+    data/backtest \
+    data/live \
+    data/cache \
+    logs \
+    tmp
+
+# Set permissions
+RUN chmod -R 755 app/ && \
+    chmod +x scripts/*.py scripts/*.sh 2>/dev/null || true && \
+    chmod 777 tmp/
+
+# Comprehensive verification
+RUN echo "=== VERIFICATION ===" && \
+    python -c "import talib; print(f'✅ TA-Lib: {getattr(talib, '__version__', 'installed')}')" && \
+    python -c "import numpy; print(f'✅ NumPy: {numpy.__version__}')" && \
+    python -c "import pandas; print(f'✅ Pandas: {pandas.__version__}')" && \
+    python -c "import fastapi; print('✅ FastAPI: OK')" && \
+    echo "=== SYSTEM READY ==="
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=5 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000 8080
+CMD ["python", "app/main.py"]
