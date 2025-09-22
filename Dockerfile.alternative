@@ -51,11 +51,11 @@ RUN chmod -R 755 app/ && \
     chmod +x scripts/*.py scripts/*.sh 2>/dev/null || true && \
     chmod 777 tmp/
 
-# Comprehensive verification
+# Comprehensive verification - FIXED syntax
 RUN echo "=== VERIFICATION ===" && \
-    python -c "import talib; print(f'✅ TA-Lib: {getattr(talib, '__version__', 'installed')}')" && \
-    python -c "import numpy; print(f'✅ NumPy: {numpy.__version__}')" && \
-    python -c "import pandas; print(f'✅ Pandas: {pandas.__version__}')" && \
+    python -c "import talib; print('✅ TA-Lib: ' + str(getattr(talib, '__version__', 'installed')))" && \
+    python -c "import numpy; print('✅ NumPy: ' + numpy.__version__)" && \
+    python -c "import pandas; print('✅ Pandas: ' + pandas.__version__)" && \
     python -c "import fastapi; print('✅ FastAPI: OK')" && \
     echo "=== SYSTEM READY ==="
 
