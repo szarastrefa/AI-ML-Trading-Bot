@@ -1,50 +1,66 @@
 #!/bin/bash
-# Startup script for AI/ML Trading Bot
+# AI/ML Trading Bot v3.0 - Professional Web GUI Startup Script
 
-echo "?? Starting AI/ML Trading Bot v2.1..."
-echo "?? Current directory: $(pwd)"
-echo "?? Python path: $PYTHONPATH"
+echo "🚀 Starting AI/ML Trading Bot v3.0 - Professional Web GUI..."
+echo "📝 Current directory: $(pwd)"
+echo "🐍 Python version: $(python --version)"
 
 # Set Python path
 export PYTHONPATH="/app:$PYTHONPATH"
 
-# Create directories
-mkdir -p data/{logs,models,historical,backtest,live,cache} logs tmp
+# Create required directories
+echo "📁 Creating directories..."
+mkdir -p data/{models,cache,logs} logs tmp
 
-# Test critical imports
-echo "?? Testing imports..."
+# Test core imports
+echo "🧪 Testing core imports..."
 python -c "
 import sys
 sys.path.insert(0, '/app')
 
-print('Testing core imports...')
-import numpy as np
-import pandas as pd
-print(f'? NumPy: {np.__version__}')
-print(f'? Pandas: {pd.__version__}')
-
+print('🔍 Testing imports...')
 try:
-    import talib
-    print('? TA-Lib: Available')
-except ImportError:
-    print('?? TA-Lib: Using fallback')
-
-try:
-    from app.strategies.talib_stable_strategy import TALibStableStrategy
-    strategy = TALibStableStrategy({})
-    print(f'? Strategy: {strategy.name}')
-except Exception as e:
-    print(f'? Strategy import error: {e}')
+    import fastapi
+    print(f'✅ FastAPI: {fastapi.__version__}')
+except ImportError as e:
+    print(f'❌ FastAPI import failed: {e}')
     exit(1)
 
-print('? All imports successful!')
+try:
+    import uvicorn
+    print('✅ Uvicorn: Available')
+except ImportError as e:
+    print(f'❌ Uvicorn import failed: {e}')
+    exit(1)
+
+try:
+    import pandas as pd
+    print(f'✅ Pandas: {pd.__version__}')
+except ImportError:
+    print('⚠️ Pandas: Not available (optional)')
+
+try:
+    import numpy as np
+    print(f'✅ NumPy: {np.__version__}')
+except ImportError:
+    print('⚠️ NumPy: Not available (optional)')
+
+print('✅ Core imports successful!')
 "
 
 if [ $? -ne 0 ]; then
-    echo "? Import test failed - check dependencies"
+    echo "❌ Import test failed - check dependencies"
     exit 1
 fi
 
-echo "?? Starting main application..."
+echo "🌐 Starting Professional Web GUI..."
+echo "📈 Dashboard will be available at: http://localhost:8000"
+echo "📚 API Documentation: http://localhost:8000/docs"
+echo "❤️ Health Check: http://localhost:8000/health"
+echo "---------------------------------------------------"
+
+# Change to app directory
 cd /app
+
+# Start the application
 exec python app/main.py
