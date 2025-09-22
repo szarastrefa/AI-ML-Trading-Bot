@@ -30,9 +30,9 @@ RUN conda install -c conda-forge ta-lib=0.4.28 -y
 # Install NumPy version compatible with TA-Lib via conda
 RUN conda install -c conda-forge numpy=1.24.4 -y
 
-# Verify conda installations
-RUN python -c "import numpy; print(f'NumPy: {numpy.__version__}')"
-RUN python -c "import talib; print(f'TA-Lib: {getattr(talib, '__version__', 'installed')}')"
+# Verify conda installations - FIXED syntax
+RUN python -c "import numpy; print('NumPy: ' + numpy.__version__)"
+RUN python -c "import talib; print('TA-Lib: ' + str(getattr(talib, '__version__', 'installed')))"
 
 # Copy requirements and install remaining Python packages via pip
 COPY requirements.txt .
@@ -59,12 +59,12 @@ RUN chmod -R 755 app/ && \
     chmod +x scripts/*.py scripts/*.sh 2>/dev/null || true && \
     chmod 777 tmp/
 
-# Final verification of all critical components
+# Final verification of all critical components - FIXED syntax
 RUN echo "=== FINAL VERIFICATION ===" && \
     python -c "import talib; import numpy; import pandas; import fastapi; print('✅ All critical imports successful')" && \
-    python -c "import talib; print(f'✅ TA-Lib version: {getattr(talib, '__version__', 'installed')}')" && \
-    python -c "import numpy; print(f'✅ NumPy version: {numpy.__version__}')" && \
-    python -c "import pandas; print(f'✅ Pandas version: {pandas.__version__}')" && \
+    python -c "import talib; print('✅ TA-Lib version: ' + str(getattr(talib, '__version__', 'installed')))" && \
+    python -c "import numpy; print('✅ NumPy version: ' + numpy.__version__)" && \
+    python -c "import pandas; print('✅ Pandas version: ' + pandas.__version__)" && \
     echo "=== SYSTEM READY ==="
 
 # Health check with conda environment
