@@ -1,9 +1,10 @@
-# Byte-compiled / optimized / DLL files
+# AI/ML Trading Bot v3.0 - Professional .gitignore
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Distribution / packaging
+*.so
 .Python
 build/
 develop-eggs/
@@ -17,11 +18,30 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+PYMANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
 # Environments
 .env
@@ -31,8 +51,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.local
+.env.production
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -41,18 +63,64 @@ venv.bak/
 
 # OS
 .DS_Store
+.AppleDouble
+.LSOverride
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Project specific
+# Trading Bot Specific
 data/
 logs/
+tmp/
 *.log
 *.db
 *.sqlite
+*.sqlite3
 
-# Node modules
-node_modules/
+# ML Models
+models/
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+*.onnx
 
-# Trading specific
-config/secret.json
+# Trading Data
+historical_data/
+backtest_results/
+live_data/
+cache/
+
+# API Keys and Secrets
+config/secrets.yaml
+config/api_keys.yaml
 config/brokers.json
+config/secret.json
+
+# Docker
+.dockerignore
+
+# Node modules (if React frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+build/
+dist/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# ML/Data Science
+*.csv
+*.xlsx
+*.parquet
+*.feather
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
