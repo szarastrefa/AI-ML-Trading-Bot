@@ -1,8 +1,9 @@
-# AI/ML Trading Bot v2.1 - CLEAN Configuration (No Warnings)
+# AI/ML Trading Bot v3.0 - Professional Web GUI
+# Simplified configuration for stable operation
 version: '3.8'
 
 services:
-  # Main Trading Bot (Clean, No Warnings)
+  # Main Trading Bot
   trading-bot:
     build: 
       context: .
@@ -10,85 +11,23 @@ services:
     container_name: ai-trading-bot-stable
     ports:
       - "8000:8000"
-      - "8080:8080"
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      - DEBUG=True
-      - POSTGRES_HOST=postgres
-      - POSTGRES_DB=trading_bot
-      - POSTGRES_USER=trading_bot
-      - POSTGRES_PASSWORD=trading_bot123
-      - REDIS_HOST=redis
-      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
-      - trading_models:/app/models
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     restart: unless-stopped
     networks:
-      - trading-network-stable
+      - trading-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 30s
-      timeout: 15s
-      retries: 5
-      start_period: 60s
-
-  # PostgreSQL Database (Clean Configuration)
-  postgres:
-    image: postgres:14-alpine
-    container_name: trading-postgres-stable
-    environment:
-      - POSTGRES_DB=trading_bot
-      - POSTGRES_USER=trading_bot
-      - POSTGRES_PASSWORD=trading_bot123
-      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-    networks:
-      - trading-network-stable
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U trading_bot -d trading_bot"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Redis Cache (Clean Configuration)  
-  redis:
-    image: redis:7-alpine
-    container_name: trading-redis-stable
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-    networks:
-      - trading-network-stable
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 3
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
-
-volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
-  trading_models:
-    driver: local
+      start_period: 30s
 
 networks:
-  trading-network-stable:
+  trading-network:
     driver: bridge
-    name: trading-network-stable
