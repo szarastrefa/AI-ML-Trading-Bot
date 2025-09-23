@@ -1,20 +1,23 @@
-# AI/ML Trading Bot v3.0 - Professional Web GUI
-# Simplified configuration for stable operation
+# AI/ML Trading Bot v3.0 - Optimized Network Configuration
+# Professional stable deployment with encoding fixes
 version: '3.8'
 
 services:
-  # Main Trading Bot
+  # Main Trading Bot - Network Accessible
   trading-bot:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: ai-trading-bot-stable
+    container_name: ai-trading-bot-professional
     ports:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=/app
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
+      - TZ=Europe/Warsaw
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -26,8 +29,23 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
 
 networks:
   trading-network:
     driver: bridge
+    name: ai-trading-network
+
+volumes:
+  trading-data:
+    driver: local
+  trading-logs:
+    driver: local
