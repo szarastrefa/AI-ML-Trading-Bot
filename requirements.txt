@@ -1,6 +1,6 @@
 # AI/ML Trading Bot v3.1 - DEPENDENCY CONFLICT RESOLUTION
-# FIXED: TensorFlow 2.16.1 + FastAPI compatibility issue
-# Solution: Upgrade TensorFlow to version compatible with typing-extensions >=4.8.0
+# FIXED: TensorFlow 2.16.1 + FastAPI compatibility issue  
+# Solution: Use TensorFlow 2.16.1 with tf-keras (Keras 2.x) for compatibility
 
 # =============================================================================
 # WEB FRAMEWORK - COMPATIBLE VERSIONS
@@ -20,14 +20,14 @@ pandas==2.0.3               # Stable version
 scipy==1.11.4               # Compatible with numpy 1.26.4
 
 # =============================================================================
-# MACHINE LEARNING - UPGRADED STACK  
+# MACHINE LEARNING - CORRECTED STACK  
 # =============================================================================
 scikit-learn==1.3.2         # Latest compatible
 joblib==1.3.2               # Stable version
 
 # TensorFlow - UPGRADED to resolve typing-extensions conflict
 tensorflow==2.16.1          # COMPATIBLE with typing-extensions >=4.6.1
-keras==2.16.0               # Matches TensorFlow version
+tf-keras==2.16.0            # KERAS 2.x compatibility (instead of keras==2.16.0)
 
 # =============================================================================
 # FINANCIAL DATA - ESSENTIAL
@@ -58,6 +58,7 @@ pytz==2023.3                # Timezone support
 # ✅ TensorFlow 2.16.1 supports typing-extensions >=4.6.1
 # ✅ FastAPI 0.104.1 requires typing-extensions >=4.8.0  
 # ✅ Pydantic 2.5.0 requires typing-extensions >=4.6.1
+# ✅ tf-keras 2.16.0 provides Keras 2.x compatibility with TF 2.16.1
 # ✅ No more conflicts - all packages will use compatible typing-extensions
-# ✅ Custom TA library included in app/utils/custom_Ta.py (no pandas-ta needed)
+# ✅ Custom TA library included in app/utils/custom_ta.py (no pandas-ta needed)
 # =============================================================================
