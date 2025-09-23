@@ -1,11 +1,13 @@
-# AI/ML Trading Bot v3.0 - Professional Web GUI
-# Minimal Docker image for stable operation
+# AI/ML Trading Bot v3.0 - Optimized Professional Container
+# Network accessible version with encoding fixes
 FROM python:3.10-slim
 
-# Environment variables
+# Environment variables for stability
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONPATH=/app
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 # Set working directory
 WORKDIR /app
@@ -13,12 +15,16 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    git \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and install wheel
+RUN pip install --upgrade pip setuptools wheel
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY app/ ./app/
@@ -37,5 +43,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # Expose port
 EXPOSE 8000
 
-# Start command
-CMD ["python", "app/main.py"]
+# Start command with proper encoding
+CMD ["python", "-u", "app/main.py"]
