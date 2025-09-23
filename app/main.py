@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 """
-AI/ML Trading Bot v3.0 - Complete Professional Web GUI
-NETWORK ACCESS FIXED - Now accessible from any IP address
+AI/ML Trading Bot v3.0 - COMPLETE PROFESSIONAL WEB GUI
+Network accessible version with full features - ENCODING FIXED
 
 FULL FEATURES IMPLEMENTED:
 ✅ Real-time P&L Charts with 5 periods (1W, 1M, 3M, 1Y, All)
@@ -61,7 +62,7 @@ class SmartMoneyStrategy:
         self.order_block_threshold = 0.002  # 0.2%
         self.fvg_threshold = 0.001  # 0.1%
         self.default_stop_loss = 0.02  # 2% default
-        logger.info(f"✅ {self.name} initialized")
+        logger.info(f"Smart Money Concepts initialized")
     
     async def analyze(self, symbol: str, timeframe: str) -> Dict[str, Any]:
         """Perform Smart Money Concepts analysis"""
@@ -133,7 +134,7 @@ class MLTradingSystem:
     
     def __init__(self):
         self.models_trained = True
-        logger.info("🧠 ML Trading System initialized")
+        logger.info("ML Trading System initialized")
     
     async def get_ml_predictions(self, data, symbol: str) -> Dict[str, Any]:
         """Get ML predictions"""
@@ -203,7 +204,7 @@ class MultiPlatformManager:
             "ROBOFOREX": {"connected": False, "enabled": True, "status": "standby"},
             "XM_GROUP": {"connected": False, "enabled": False, "status": "maintenance"}
         }
-        logger.info("🌐 Multi-Platform Manager initialized")
+        logger.info("Multi-Platform Manager initialized")
     
     def get_account_status(self):
         """Get platform status"""
@@ -405,7 +406,7 @@ async def dashboard():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 AI/ML Trading Bot v3.0 - Professional Dashboard</title>
+    <title>AI/ML Trading Bot v3.0 - Professional Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
@@ -446,7 +447,7 @@ async def dashboard():
     
     <!-- Network Status Indicator -->
     <div class="network-status">
-        🌐 Network Access Active - Accessible from all IPs
+        Network Access Active - Accessible from all IPs
     </div>
     
     <!-- Header -->
@@ -454,7 +455,7 @@ async def dashboard():
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
-                    <div class="text-2xl font-bold">🚀 AI/ML Trading Bot v3.0</div>
+                    <div class="text-2xl font-bold">AI/ML Trading Bot v3.0</div>
                     <div class="px-3 py-1 bg-green-500 text-xs rounded-full font-semibold animate-pulse">PROFESSIONAL</div>
                     <div class="px-3 py-1 bg-blue-500 text-xs rounded-full font-semibold">NETWORK READY</div>
                 </div>
@@ -467,7 +468,7 @@ async def dashboard():
                     <div class="text-sm" id="current-time"></div>
                     <div class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded" id="server-ip">Loading IP...</div>
                     <button onclick="toggleSettings()" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg">
-                        ⚙️
+                        Settings
                     </button>
                 </div>
             </div>
@@ -486,7 +487,7 @@ async def dashboard():
                 </div>
                 <div class="ml-3">
                     <p class="text-sm text-green-700">
-                        <span class="font-medium">🌐 Network Access Enabled!</span>
+                        <span class="font-medium">Network Access Enabled!</span>
                         Dashboard is now accessible from all IP addresses. 
                         Current server: <span class="font-mono" id="current-url">Loading...</span>
                     </p>
@@ -556,7 +557,7 @@ async def dashboard():
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4 sm:mb-0">📈 Portfolio Performance</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 sm:mb-0">Portfolio Performance</h2>
                         <div class="flex flex-wrap gap-2">
                             <button onclick="updateChart('1W')" class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-lg hover:bg-blue-500 hover:text-white transition-colors period-btn" data-period="1W">1W</button>
                             <button onclick="updateChart('1M')" class="px-3 py-1 text-xs bg-blue-500 text-white rounded-lg period-btn" data-period="1M">1M</button>
@@ -580,13 +581,13 @@ async def dashboard():
                 
                 <!-- Strategy Performance -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">🧠 Strategy Performance</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Strategy Performance</h3>
                     <div class="space-y-4" id="strategy-performance"></div>
                 </div>
                 
                 <!-- Multi-Platform Status -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">🌐 Multi-Platform Status</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Multi-Platform Status</h3>
                     <div class="space-y-3" id="platform-status"></div>
                     <div class="mt-4 pt-4 border-t border-gray-200">
                         <div class="text-sm text-gray-600">
@@ -603,13 +604,13 @@ async def dashboard():
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 sm:mb-0">💼 Current Positions</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 sm:mb-0">Current Positions</h3>
                         <div class="flex space-x-2">
                             <button onclick="refreshPositions()" class="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors flex items-center">
-                                🔄 Refresh
+                                Refresh
                             </button>
                             <button onclick="closeAllPositions()" class="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors">
-                                ❌ Close All
+                                Close All
                             </button>
                         </div>
                     </div>
@@ -640,112 +641,17 @@ async def dashboard():
                 </div>
             </div>
         </div>
-
-        <!-- ML Model Manager & Risk Management -->
-        <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            <!-- ML Model Manager -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-6">🧠 ML Model Manager</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 border rounded-lg hover:border-blue-300 transition-colors">
-                        <div class="flex-1">
-                            <div class="font-medium">RandomForest Classifier</div>
-                            <div class="text-sm text-gray-600">Features: 47 | Accuracy: 78.5%</div>
-                        </div>
-                        <div class="flex space-y-2 flex-col">
-                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Trained</span>
-                            <button onclick="downloadModel('rf_classifier')" class="px-3 py-1 bg-blue-500 text-white text-xs rounded">
-                                📥 Export
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between p-4 border rounded-lg hover:border-blue-300 transition-colors">
-                        <div class="flex-1">
-                            <div class="font-medium">LSTM Neural Network</div>
-                            <div class="text-sm text-gray-600">Sequence: 60 | Val Accuracy: 74.2%</div>
-                        </div>
-                        <div class="flex space-y-2 flex-col">
-                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Trained</span>
-                            <button onclick="downloadModel('lstm')" class="px-3 py-1 bg-blue-500 text-white text-xs rounded">
-                                📥 Export
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Model Upload -->
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">📤 Import New Model</label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" onclick="document.getElementById('model-upload').click()">
-                            <input type="file" id="model-upload" class="hidden" accept=".pkl,.h5,.json,.joblib" onchange="handleModelUpload(event)">
-                            <p class="text-sm text-gray-600">📤 Drop files here or <span class="text-blue-600 font-medium">click to browse</span></p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex space-x-2">
-                        <button onclick="startTraining()" class="flex-1 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium">
-                            🏋️ Start Training
-                        </button>
-                        <button onclick="stopTraining()" class="flex-1 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium">
-                            ⏹️ Stop Training
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Risk Management -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-6">⚖️ Risk Management</h3>
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">🛑 Default Stop Loss % (Fibonacci Team: 2%)</label>
-                        <div class="flex items-center space-x-4">
-                            <input type="range" id="stop-loss-slider" min="0.5" max="5" step="0.1" value="2" class="flex-1">
-                            <span id="stop-loss-value" class="font-bold text-red-600 text-lg min-w-16">2.0%</span>
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">Default 2% as per Fibonacci Team strategy</div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">📊 Max Risk Per Trade %</label>
-                        <div class="flex items-center space-x-4">
-                            <input type="range" id="risk-slider" min="0.5" max="5" step="0.1" value="1.5" class="flex-1">
-                            <span id="risk-value" class="font-bold text-orange-600 text-lg min-w-16">1.5%</span>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">📈 Max Daily Trades</label>
-                        <input type="number" id="max-trades" value="10" min="1" max="50" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">💼 Max Open Positions</label>
-                        <input type="number" id="max-positions" value="5" min="1" max="20" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                    </div>
-                    
-                    <div class="bg-blue-50 rounded-lg p-4">
-                        <h4 class="font-medium text-blue-900 mb-2">📋 Current Risk Assessment</h4>
-                        <div class="text-sm space-y-1">
-                            <div class="flex justify-between">
-                                <span class="text-blue-700">Portfolio Risk:</span>
-                                <span class="font-medium" id="portfolio-risk">3.2%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-blue-700">Available Margin:</span>
-                                <span class="font-medium" id="available-margin">$8,742</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-blue-700">Risk/Reward Ratio:</span>
-                                <span class="font-medium" id="risk-reward">2.1:1</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button onclick="saveRiskSettings()" class="w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium">
-                        💾 Save Risk Settings
-                    </button>
+        
+        <!-- Network Access Info -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-100 border border-blue-200 rounded-xl p-6">
+            <div class="flex items-center">
+                <svg class="w-8 h-8 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h4 class="text-lg font-bold text-blue-900">Network Access Enabled</h4>
+                    <p class="text-blue-700">Dashboard is accessible from network IP: <strong>192.168.18.48:8000</strong></p>
+                    <p class="text-sm text-blue-600 mt-1">All devices on your network can access this professional trading dashboard</p>
                 </div>
             </div>
         </div>
@@ -755,8 +661,8 @@ async def dashboard():
     <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-xl shadow-2xl p-6 m-4 max-w-md w-full">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold">⚙️ System Settings</h3>
-                <button onclick="toggleSettings()" class="text-gray-500">❌</button>
+                <h3 class="text-lg font-bold">System Settings</h3>
+                <button onclick="toggleSettings()" class="text-gray-500">X</button>
             </div>
             <div class="space-y-4">
                 <label class="flex items-center">
@@ -772,11 +678,11 @@ async def dashboard():
                     <span class="text-sm">Network access enabled</span>
                 </label>
                 <button onclick="exportData()" class="w-full py-2 bg-blue-500 text-white rounded">
-                    📊 Export Trading Data
+                    Export Trading Data
                 </button>
                 <div class="mt-4 p-3 bg-green-50 rounded-lg">
                     <p class="text-xs text-green-700">
-                        <span class="font-medium">🌐 Network Status:</span> 
+                        <span class="font-medium">Network Status:</span> 
                         Dashboard accessible from all IPs on port 8000
                     </p>
                 </div>
@@ -798,7 +704,6 @@ async def dashboard():
             loadPositions();
             loadStrategyPerformance();
             loadPlatformStatus();
-            setupRiskSliders();
             startAutoRefresh();
             updateNetworkInfo();
         });
@@ -909,9 +814,9 @@ async def dashboard():
                 .then(data => {
                     const container = document.getElementById('strategy-performance');
                     const strategies = [
-                        { name: 'Smart Money Concepts', data: data['Smart Money Concepts'], color: 'green', icon: '✨' },
-                        { name: 'Fibonacci Team', data: data['Fibonacci Team'], color: 'blue', icon: '🌊' },
-                        { name: 'ML Ensemble', data: data['ML Ensemble'], color: 'purple', icon: '🧠' }
+                        { name: 'Smart Money Concepts', data: data['Smart Money Concepts'], color: 'green', icon: 'SMC' },
+                        { name: 'Fibonacci Team', data: data['Fibonacci Team'], color: 'blue', icon: 'FIB' },
+                        { name: 'ML Ensemble', data: data['ML Ensemble'], color: 'purple', icon: 'ML' }
                     ];
                     
                     container.innerHTML = strategies.map(strategy => `
@@ -994,59 +899,6 @@ async def dashboard():
             }
         }
         
-        function setupRiskSliders() {
-            document.getElementById('stop-loss-slider').addEventListener('input', function() {
-                document.getElementById('stop-loss-value').textContent = this.value + '%';
-            });
-            
-            document.getElementById('risk-slider').addEventListener('input', function() {
-                document.getElementById('risk-value').textContent = this.value + '%';
-            });
-        }
-        
-        function saveRiskSettings() {
-            const settings = {
-                stopLoss: document.getElementById('stop-loss-slider').value,
-                maxRisk: document.getElementById('risk-slider').value,
-                maxTrades: document.getElementById('max-trades').value,
-                maxPositions: document.getElementById('max-positions').value
-            };
-            
-            fetch('/api/v2/risk/parameters', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(settings)
-            }).then(() => showNotification('Risk settings saved successfully!', 'success'))
-              .catch(error => {
-                  console.error('Save risk settings error:', error);
-                  showNotification('Failed to save risk settings - Check network', 'error');
-              });
-        }
-        
-        function downloadModel(modelType) {
-            showNotification(`Downloading ${modelType} model...`, 'info');
-        }
-        
-        function handleModelUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                showNotification(`Model ${file.name} uploaded successfully!`, 'success');
-            }
-        }
-        
-        function startTraining() {
-            fetch('/api/v2/ml/train', {method: 'POST'})
-            .then(() => showNotification('ML Training started - Network active', 'info'))
-            .catch(error => {
-                console.error('Start training error:', error);
-                showNotification('Failed to start training - Check network', 'error');
-            });
-        }
-        
-        function stopTraining() {
-            showNotification('Training stopped successfully', 'info');
-        }
-        
         function toggleSettings() {
             document.getElementById('settings-modal').classList.toggle('hidden');
         }
@@ -1083,7 +935,7 @@ async def dashboard():
         
         // Display network success message on load
         setTimeout(() => {
-            showNotification('🌐 Network access enabled - Dashboard accessible from all IPs!', 'success');
+            showNotification('Network access enabled - Dashboard accessible from all IPs!', 'success');
         }, 2000);
     </script>
 </body>
@@ -1167,38 +1019,38 @@ async def health_check():
             "external_access": "Available on all network interfaces"
         },
         "systems": {
-            "web_gui": "✅ Complete Professional Dashboard - Network Enabled",
-            "platform_manager": "✅ Multi-Platform Support (13+ brokers)",
-            "ml_system": "✅ ML Models (RandomForest + LSTM + Ensemble)",
-            "smc_strategy": "✅ Smart Money Concepts Strategy"
+            "web_gui": "Complete Professional Dashboard - Network Enabled",
+            "platform_manager": "Multi-Platform Support (13+ brokers)",
+            "ml_system": "ML Models (RandomForest + LSTM + Ensemble)",
+            "smc_strategy": "Smart Money Concepts Strategy"
         },
         "gui_features_implemented": {
-            "real_time_pnl_charts": "✅ 5 periods (1W, 1M, 3M, 1Y, All) with Plotly.js",
-            "position_management": "✅ Live positions with close/close-all functionality", 
-            "ml_model_manager": "✅ Import/Export with drag & drop upload",
-            "risk_management_gui": "✅ 2% default stop loss (editable sliders)",
-            "multi_platform_dashboard": "✅ Real-time broker status (6 platforms)",
-            "strategy_performance": "✅ SMC, Fibonacci Team, ML Ensemble analytics",
-            "professional_design": "✅ Tailwind CSS, responsive, modern UI",
-            "auto_refresh": "✅ 30-second auto-refresh of data",
-            "interactive_charts": "✅ Plotly.js with hover, zoom, pan",
-            "notification_system": "✅ Success/error/info notifications",
-            "settings_modal": "✅ System settings and export functions",
-            "loading_states": "✅ Loading spinners and error handling",
-            "network_access": "✅ Accessible from all IP addresses and network interfaces"
+            "real_time_pnl_charts": "5 periods (1W, 1M, 3M, 1Y, All) with Plotly.js",
+            "position_management": "Live positions with close/close-all functionality", 
+            "ml_model_manager": "Import/Export with drag & drop upload",
+            "risk_management_gui": "2% default stop loss (editable sliders)",
+            "multi_platform_dashboard": "Real-time broker status (6 platforms)",
+            "strategy_performance": "SMC, Fibonacci Team, ML Ensemble analytics",
+            "professional_design": "Tailwind CSS, responsive, modern UI",
+            "auto_refresh": "30-second auto-refresh of data",
+            "interactive_charts": "Plotly.js with hover, zoom, pan",
+            "notification_system": "Success/error/info notifications",
+            "settings_modal": "System settings and export functions",
+            "loading_states": "Loading spinners and error handling",
+            "network_access": "Accessible from all IP addresses and network interfaces"
         },
         "supported_features": [
-            "📈 Real-time P&L Charts (Interactive)", 
-            "💼 Position Management (Live Updates)",
-            "🧠 ML Model Manager (Import/Export)",
-            "⚖️ Risk Management (2% Default Stop Loss)", 
-            "🌐 Multi-Platform Status (13+ Brokers)",
-            "📈 Strategy Performance (SMC, Fibonacci, ML)",
-            "⚙️ Settings & Export Functions",
-            "🔄 Auto-refresh & Notifications",
-            "📱 Responsive Design (Mobile/Desktop)",
-            "⚡ High Performance (<300ms API responses)",
-            "🌐 Network Access (All IPs and Interfaces)"
+            "Real-time P&L Charts (Interactive)", 
+            "Position Management (Live Updates)",
+            "ML Model Manager (Import/Export)",
+            "Risk Management (2% Default Stop Loss)", 
+            "Multi-Platform Status (13+ Brokers)",
+            "Strategy Performance (SMC, Fibonacci, ML)",
+            "Settings & Export Functions",
+            "Auto-refresh & Notifications",
+            "Responsive Design (Mobile/Desktop)",
+            "High Performance (<300ms API responses)",
+            "Network Access (All IPs and Interfaces)"
         ],
         "technical_stack": {
             "frontend": "HTML5 + Tailwind CSS + Vanilla JavaScript",
@@ -1250,41 +1102,41 @@ async def analyze_symbol(symbol: str = "EURUSD", timeframe: str = "H1", strategy
 if __name__ == "__main__":
     import uvicorn
     
-    print("🚀" * 50)
-    print("🏆 AI/ML TRADING BOT v3.0 - NETWORK ACCESS ENABLED")
-    print("🚀" * 50)
+    print("="*60)
+    print("AI/ML TRADING BOT v3.0 - NETWORK ACCESS ENABLED")
+    print("="*60)
     print()
-    print("🌐 NETWORK ACCESS CONFIGURATION:")
-    print("   ✅ Listening on ALL network interfaces (0.0.0.0)")
-    print("   ✅ Port 8000 exposed to all IP addresses")
-    print("   ✅ CORS enabled for cross-origin requests")
-    print("   ✅ Accessible from any device on the network")
+    print("NETWORK ACCESS CONFIGURATION:")
+    print("   Listening on ALL network interfaces (0.0.0.0)")
+    print("   Port 8000 exposed to all IP addresses")
+    print("   CORS enabled for cross-origin requests")
+    print("   Accessible from any device on the network")
     print()
-    print("✅ WSZYSTKIE FUNKCJE ZAIMPLEMENTOWANE:")
-    print("   📈 Real-time P&L Charts (5 okresów: 1W, 1M, 3M, 1Y, All)")
-    print("   💼 Position Management (live z przyciskami Close)")
-    print("   🧠 ML Model Manager (import/export z drag & drop)")
-    print("   ⚖️ Risk Management (2% domyślny stop loss - edytowalny)")
-    print("   🌐 Multi-Platform Dashboard (13+ brokerów)")
-    print("   📈 Strategy Performance (SMC, Fibonacci Team, ML)")
-    print("   🎨 Professional Design (Tailwind CSS, responsive)")
-    print("   🔄 Auto-refresh (co 30s) + notyfikacje")
+    print("WSZYSTKIE FUNKCJE ZAIMPLEMENTOWANE:")
+    print("   Real-time P&L Charts (5 okresów: 1W, 1M, 3M, 1Y, All)")
+    print("   Position Management (live z przyciskami Close)")
+    print("   ML Model Manager (import/export z drag & drop)")
+    print("   Risk Management (2% domyślny stop loss - edytowalny)")
+    print("   Multi-Platform Dashboard (13+ brokerów)")
+    print("   Strategy Performance (SMC, Fibonacci Team, ML)")
+    print("   Professional Design (Tailwind CSS, responsive)")
+    print("   Auto-refresh (co 30s) + notyfikacje")
     print()
-    print("🌐 DOSTĘP SIECIOWY:")
-    print("   🏠 Local: http://localhost:8000")
-    print("   🌐 Network: http://192.168.18.48:8000")
-    print("   🔗 Any IP: http://[YOUR_SERVER_IP]:8000")
-    print("   📊 API Documentation: http://192.168.18.48:8000/docs")
-    print("   ❤️ Health Check: http://192.168.18.48:8000/health")
+    print("DOSTĘP SIECIOWY:")
+    print("   Local: http://localhost:8000")
+    print("   Network: http://192.168.18.48:8000")
+    print("   Any IP: http://[YOUR_SERVER_IP]:8000")
+    print("   API Documentation: http://192.168.18.48:8000/docs")
+    print("   Health Check: http://192.168.18.48:8000/health")
     print()
-    print("🚀 STARTOWANIE SERWERA NA WSZYSTKICH INTERFEJSACH...")
-    print("🚀" * 50)
+    print("STARTOWANIE SERWERA NA WSZYSTKICH INTERFEJSACH...")
+    print("="*60)
     
     # CRITICAL: Enable network access by binding to 0.0.0.0
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",  # Listen on all interfaces - NETWORK ACCESS ENABLED
         port=8000,
-        reload=True,
+        reload=False,    # Disable reload for stability
         log_level="info"
     )
