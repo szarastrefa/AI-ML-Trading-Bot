@@ -1,3 +1,7 @@
+# AI/ML Trading Bot v3.0 - COMPATIBILITY FIXED
+# Production-ready Docker Compose with resource management
+# numpy 1.24.3 + TensorFlow 2.13.0 = COMPATIBLE
+
 version: '3.8'
 
 services:
@@ -6,20 +10,64 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ai-trading-bot-professional
+    
+    # Network configuration
     ports:
       - "8000:8000"
+    
+    # Environment variables for compatibility
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONIOENCODING=utf-8
       - LANG=C.UTF-8
       - LC_ALL=C.UTF-8
+      - ENVIRONMENT=production
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - OMP_NUM_THREADS=2
+    
+    # Volume mounts for data persistence
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./tmp:/app/tmp
+    
+    # Restart policy
     restart: unless-stopped
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    
+    # Resource limits (ML-optimized)
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Networks
     networks:
       - ai-trading-network
+    
+    # Command override for compatibility
     command: ["python", "-u", "app/main.py"]
 
 networks:
   ai-trading-network:
     driver: bridge
     name: ai-trading-network
+
+# Named volumes for persistence
+volumes:
+  trading-data:
+    driver: local
+  trading-logs:
+    driver: local
