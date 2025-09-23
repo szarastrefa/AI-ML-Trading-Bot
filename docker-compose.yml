@@ -1,9 +1,6 @@
-# AI/ML Trading Bot v3.0 - Optimized Network Configuration
-# Professional stable deployment with encoding fixes
 version: '3.8'
 
 services:
-  # Main Trading Bot - Network Accessible
   trading-bot:
     build: 
       context: .
@@ -14,38 +11,15 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=/app
+      - PYTHONIOENCODING=utf-8
       - LANG=C.UTF-8
       - LC_ALL=C.UTF-8
-      - TZ=Europe/Warsaw
-    volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
     restart: unless-stopped
     networks:
-      - trading-network
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 256M
+      - ai-trading-network
+    command: ["python", "-u", "app/main.py"]
 
 networks:
-  trading-network:
+  ai-trading-network:
     driver: bridge
     name: ai-trading-network
-
-volumes:
-  trading-data:
-    driver: local
-  trading-logs:
-    driver: local
