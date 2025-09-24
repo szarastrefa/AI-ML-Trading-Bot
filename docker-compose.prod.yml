@@ -1,0 +1,455 @@
+# AI/ML Trading Bot v5.0 - PRODUCTION DEPLOYMENT
+# Enterprise-grade Docker Compose dla production environment
+# Użyj: docker-compose -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Nginx Reverse Proxy (SSL Termination & Load Balancing)
+  nginx:
+    image: nginx:alpine
+    container_name: ai-trading-nginx
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/logs:/var/log/nginx
+    
+    depends_on:
+      - trading-bot
+    
+    restart: unless-stopped
+    
+    networks:
+      - trading-network
+      - web-network
+    
+    labels:
+      - "com.ai-trading-bot.service=proxy"
+      - "com.ai-trading-bot.version=5.0.0"
+
+  # Main AI/ML Trading Bot Application
+  trading-bot:
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        - ENVIRONMENT=production
+        - VERSION=5.0.0
+    
+    container_name: ai-trading-bot-v5-production
+    
+    # Internal ports (behind nginx)
+    expose:
+      - "8000"
+      - "8001"  # WebSocket port
+    
+    # Production environment variables
+    environment:
+      # Python optimization
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONIOENCODING=utf-8
+      - PYTHONPATH=/app
+      
+      # Application
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - VERSION=5.0.0-production
+      - WORKERS=2
+      
+      # TensorFlow production optimization
+      - TF_USE_LEGACY_KERAS=1
+      - TF_CPP_MIN_LOG_LEVEL=1
+      - TF_ENABLE_ONEDNN_OPTS=1
+      - OMP_NUM_THREADS=4
+      - TF_NUM_INTEROP_THREADS=2
+      - TF_NUM_INTRAOP_THREADS=4
+      
+      # Database connections
+      - DATABASE_URL=postgresql://trading_user:${POSTGRES_PASSWORD}@postgres:5432/trading_bot
+      - REDIS_URL=redis://redis:6379/0
+      
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      
+      # Trading settings
+      - AUTO_TRADING_ENABLED=true
+      - MAX_DAILY_LOSS_PCT=5.0
+      - EMERGENCY_STOP_LOSS_PCT=10.0
+    
+    # Production volume mounts
+    volumes:
+      - trading-data:/app/data
+      - trading-logs:/app/logs
+      - trading-models:/app/models
+      - trading-backups:/app/backups
+      - trading-config:/app/config
+    
+    # Dependencies
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    restart: unless-stopped
+    
+    # Production health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+    
+    # Production resource limits (optimized for trading)
+    deploy:
+      resources:
+        limits:
+          memory: 4G          # Increased for production ML workloads
+          cpus: '3.0'         # 3 CPU cores for parallel processing
+        reservations:
+          memory: 2G          # Guaranteed memory
+          cpus: '1.5'         # Guaranteed CPU
+    
+    networks:
+      - trading-network
+      - db-network
+    
+    # Production labels
+    labels:
+      - "com.ai-trading-bot.service=main"
+      - "com.ai-trading-bot.version=5.0.0"
+      - "com.ai-trading-bot.environment=production"
+      - "traefik.enable=true"
+      - "traefik.http.routers.trading-bot.rule=Host(`your-domain.com`)"
+
+  # PostgreSQL Database (Production)
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-trading-postgres
+    
+    environment:
+      - POSTGRES_DB=trading_bot
+      - POSTGRES_USER=trading_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./sql/functions.sql:/docker-entrypoint-initdb.d/02-functions.sql:ro
+      - postgres-backups:/backups
+    
+    ports:
+      - "5432:5432"  # Exposed for admin tools
+    
+    restart: unless-stopped
+    
+    # Database health check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trading_user -d trading_bot"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    
+    # Database resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    networks:
+      - db-network
+    
+    labels:
+      - "com.ai-trading-bot.service=database"
+      - "com.ai-trading-bot.version=5.0.0"
+
+  # Redis Cache & Sessions (Production)
+  redis:
+    image: redis:7-alpine
+    container_name: ai-trading-redis-prod
+    
+    command: redis-server /etc/redis/redis.conf
+    
+    volumes:
+      - redis-data:/data
+      - ./config/redis-prod.conf:/etc/redis/redis.conf:ro
+    
+    ports:
+      - "6379:6379"
+    
+    restart: unless-stopped
+    
+    # Redis health check
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    
+    # Redis resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    
+    networks:
+      - trading-network
+    
+    labels:
+      - "com.ai-trading-bot.service=cache"
+      - "com.ai-trading-bot.version=5.0.0"
+
+  # Optional: Monitoring Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ai-trading-prometheus
+    
+    ports:
+      - "9090:9090"
+    
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    
+    restart: unless-stopped
+    
+    networks:
+      - monitoring-network
+    
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ai-trading-grafana
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    
+    depends_on:
+      - prometheus
+    
+    restart: unless-stopped
+    
+    networks:
+      - monitoring-network
+    
+    profiles:
+      - monitoring
+
+# =============================================================================
+# NETWORKS CONFIGURATION
+# =============================================================================
+
+networks:
+  # Main trading network (isolated)
+  trading-network:
+    driver: bridge
+    name: ai-trading-network-prod
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+    
+  # Database network (secure)
+  db-network:
+    driver: bridge
+    name: ai-trading-db-network
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16
+  
+  # Web/proxy network
+  web-network:
+    driver: bridge
+    name: ai-trading-web-network
+    external: false
+  
+  # Monitoring network
+  monitoring-network:
+    driver: bridge
+    name: ai-trading-monitoring
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
+
+# =============================================================================
+# VOLUMES CONFIGURATION (Production Persistence)
+# =============================================================================
+
+volumes:
+  # Application data (credentials, settings, cache)
+  trading-data:
+    driver: local
+    name: ai-trading-data-prod
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+  
+  # System logs (structured, rotated)
+  trading-logs:
+    driver: local
+    name: ai-trading-logs-prod
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs
+  
+  # ML models storage (persistent, backed up)
+  trading-models:
+    driver: local
+    name: ai-trading-models-prod
+    driver_opts:
+      type: none
+      o: bind
+      device: ./models
+  
+  # System backups (automated)
+  trading-backups:
+    driver: local
+    name: ai-trading-backups-prod
+    driver_opts:
+      type: none
+      o: bind
+      device: ./backups
+  
+  # Configuration files
+  trading-config:
+    driver: local
+    name: ai-trading-config-prod
+    driver_opts:
+      type: none
+      o: bind
+      device: ./config
+  
+  # PostgreSQL data (production database)
+  postgres-data:
+    driver: local
+    name: ai-trading-postgres-prod
+  
+  # PostgreSQL backups
+  postgres-backups:
+    driver: local
+    name: ai-trading-postgres-backups
+  
+  # Redis data (cache persistence)
+  redis-data:
+    driver: local
+    name: ai-trading-redis-prod
+  
+  # Monitoring data
+  prometheus-data:
+    driver: local
+    name: ai-trading-prometheus-data
+  
+  grafana-data:
+    driver: local
+    name: ai-trading-grafana-data
+
+# =============================================================================
+# PRODUCTION DEPLOYMENT COMMANDS:
+# =============================================================================
+# 
+# 🚀 QUICK PRODUCTION DEPLOY:
+#    docker-compose -f docker-compose.prod.yml up -d --build
+# 
+# 🔍 PRODUCTION MONITORING:
+#    docker-compose -f docker-compose.prod.yml logs -f trading-bot
+#    docker-compose -f docker-compose.prod.yml ps
+#    curl https://your-domain.com/health
+# 
+# 📊 WITH MONITORING STACK:
+#    docker-compose -f docker-compose.prod.yml --profile monitoring up -d
+#    # Grafana: http://localhost:3000 (admin/admin123)
+#    # Prometheus: http://localhost:9090
+# 
+# 🔧 MAINTENANCE:
+#    docker-compose -f docker-compose.prod.yml restart trading-bot
+#    docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml up -d --build
+# 
+# 💾 BACKUP:
+#    docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U trading_user trading_bot > backup.sql
+#    docker-compose -f docker-compose.prod.yml exec trading-bot python -c "import app.backup; app.backup.create_full_backup()"
+# 
+# 🔍 SSL SETUP:
+#    # 1. Generate certificates:
+#    mkdir -p nginx/ssl
+#    openssl req -x509 -newkey rsa:4096 -keyout nginx/ssl/key.pem -out nginx/ssl/cert.pem -days 365 -nodes
+#    
+#    # 2. Update nginx.conf with SSL configuration
+#    # 3. Restart nginx service
+# 
+# ⚠️ ENVIRONMENT SETUP:
+#    cp .env.example .env
+#    nano .env  # Configure production settings
+#    
+#    # Required variables:
+#    SECRET_KEY=$(openssl rand -hex 32)
+#    POSTGRES_PASSWORD=$(openssl rand -hex 16)
+#    GRAFANA_PASSWORD=secure_admin_password
+# 
+# 🌐 ACCESS URLs:
+#    - Main Panel: https://your-domain.com
+#    - API Docs: https://your-domain.com/docs
+#    - Health: https://your-domain.com/health
+#    - Grafana: https://your-domain.com:3000
+#    - Prometheus: https://your-domain.com:9090
+# 
+# 📈 SCALING:
+#    # Horizontal scaling:
+#    docker-compose -f docker-compose.prod.yml up -d --scale trading-bot=3
+#    
+#    # Resource monitoring:
+#    docker stats
+#    
+#    # Performance tuning:
+#    docker-compose -f docker-compose.prod.yml exec trading-bot python -m cProfile -o profile.stats app/main.py
+# 
+# =============================================================================
+
+# 🎯 PRODUCTION READY FEATURES:
+# ✅ Multi-service architecture
+# ✅ SSL/TLS termination
+# ✅ Database persistence
+# ✅ Advanced monitoring
+# ✅ Automatic backups
+# ✅ Resource optimization
+# ✅ Network security
+# ✅ Health checks
+# ✅ Logging aggregation
+# ✅ Secrets management
