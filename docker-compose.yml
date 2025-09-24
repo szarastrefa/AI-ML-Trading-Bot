@@ -1,73 +1,239 @@
-# AI/ML Trading Bot v3.0 - COMPATIBILITY FIXED
-# Production-ready Docker Compose with resource management
-# numpy 1.24.3 + TensorFlow 2.13.0 = COMPATIBLE
+# AI/ML Trading Bot v5.0 - KOMPLETNY PROFESJONALNY SYSTEM
+# Docker Compose dla pełnego panelu sterowania z multi-service architecture
 
 version: '3.8'
 
 services:
+  # Main Trading Bot Application
   trading-bot:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: ai-trading-bot-professional
+    container_name: ai-trading-bot-v5-professional
     
     # Network configuration
     ports:
-      - "8000:8000"
+      - "8000:8000"    # Main control panel
+      - "8001:8001"    # WebSocket real-time feeds
     
-    # Environment variables for compatibility
+    # Environment variables for v5.0
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONIOENCODING=utf-8
       - LANG=C.UTF-8
       - LC_ALL=C.UTF-8
+      
+      # Application settings
       - ENVIRONMENT=production
+      - VERSION=5.0.0-complete-control-panel
+      
+      # TensorFlow optimization
+      - TF_USE_LEGACY_KERAS=1
       - TF_CPP_MIN_LOG_LEVEL=2
-      - OMP_NUM_THREADS=2
+      - OMP_NUM_THREADS=4
+      - TF_ENABLE_ONEDNN_OPTS=0
+      
+      # ML/AI settings
+      - SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+      - JOBLIB_MULTIPROCESSING=1
+      
+      # Redis connection
+      - REDIS_URL=redis://redis:6379/0
+      - CACHE_TTL=300
+      
+      # Security
+      - SECRET_KEY=your-super-secret-key-change-in-production
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
     
-    # Volume mounts for data persistence
+    # Volume mounts for persistence
     volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
-      - ./tmp:/app/tmp
+      - ./data:/app/data                    # Trading data & credentials
+      - ./logs:/app/logs                    # System logs
+      - ./backups:/app/backups              # Backup storage
+      - ./models:/app/models                # ML models storage
+      - ./config:/app/config                # Configuration files
+      - ./tmp:/tmp                          # Temporary files
+    
+    # Dependencies
+    depends_on:
+      - redis
     
     # Restart policy
     restart: unless-stopped
     
-    # Health check
+    # Health check for control panel
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 45s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
     
-    # Resource limits (ML-optimized)
+    # Resource limits (optimized for ML workloads)
     deploy:
       resources:
         limits:
-          memory: 2G
-          cpus: '1.5'
+          memory: 3G          # Increased for TensorFlow + multiple models
+          cpus: '2.0'         # 2 CPU cores for parallel processing
         reservations:
-          memory: 512M
-          cpus: '0.5'
+          memory: 1G          # Minimum guaranteed memory
+          cpus: '0.75'        # Minimum guaranteed CPU
     
     # Networks
     networks:
-      - ai-trading-network
+      - trading-network
+      - monitoring-network
     
-    # Command override for compatibility
-    command: ["python", "-u", "app/main.py"]
+    # Labels for monitoring
+    labels:
+      - "com.ai-trading-bot.service=main"
+      - "com.ai-trading-bot.version=5.0.0"
+      - "com.ai-trading-bot.environment=production"
 
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    container_name: ai-trading-redis
+    
+    ports:
+      - "6379:6379"
+    
+    volumes:
+      - redis-data:/data
+      - ./config/redis.conf:/etc/redis/redis.conf
+    
+    command: redis-server /etc/redis/redis.conf
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
+    
+    networks:
+      - trading-network
+      - monitoring-network
+    
+    labels:
+      - "com.ai-trading-bot.service=cache"
+      - "com.ai-trading-bot.version=5.0.0"
+
+  # Optional: PostgreSQL for advanced data storage
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: ai-trading-postgres
+  #   
+  #   environment:
+  #     - POSTGRES_DB=trading_bot
+  #     - POSTGRES_USER=trading_user
+  #     - POSTGRES_PASSWORD=secure_password_change_me
+  #   
+  #   ports:
+  #     - "5432:5432"
+  #   
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #     - ./sql:/docker-entrypoint-initdb.d
+  #   
+  #   restart: unless-stopped
+  #   
+  #   networks:
+  #     - trading-network
+
+# Networks configuration
 networks:
-  ai-trading-network:
+  trading-network:
     driver: bridge
     name: ai-trading-network
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  
+  monitoring-network:
+    driver: bridge
+    name: monitoring-network
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
 
-# Named volumes for persistence
+# Named volumes for data persistence
 volumes:
+  # Application data
   trading-data:
     driver: local
+    name: ai-trading-data
+  
+  # System logs
   trading-logs:
     driver: local
+    name: ai-trading-logs
+  
+  # Redis data
+  redis-data:
+    driver: local
+    name: ai-trading-redis
+  
+  # ML models storage
+  trading-models:
+    driver: local
+    name: ai-trading-models
+  
+  # Backups
+  trading-backups:
+    driver: local
+    name: ai-trading-backups
+  
+  # PostgreSQL data (if enabled)
+  postgres-data:
+    driver: local
+    name: ai-trading-postgres
+
+# =============================================================================
+# DEPLOYMENT INSTRUCTIONS:
+# =============================================================================
+# 
+# 1. 🚀 PRODUCTION DEPLOYMENT:
+#    docker-compose -f docker-compose.yml up -d --build
+#    
+# 2. 📊 MONITORING:
+#    docker-compose logs -f trading-bot
+#    docker-compose ps
+#    
+# 3. 🔧 MAINTENANCE:
+#    docker-compose restart trading-bot
+#    docker-compose down && docker-compose up -d --build
+#    
+# 4. 💾 BACKUP:
+#    docker-compose exec trading-bot python -c "import app.backup; app.backup.create_backup()"
+#    
+# 5. 🔍 DEBUGGING:
+#    docker-compose exec trading-bot /bin/bash
+#    docker-compose logs --tail=100 trading-bot
+#
+# 🌐 Access URLs:
+# - Main Control Panel: http://localhost:8000
+# - API Documentation: http://localhost:8000/docs  
+# - Health Check: http://localhost:8000/health
+# - Redis Commander: http://localhost:8001 (if enabled)
+# 
+# 📊 Resource Usage:
+# - RAM: ~1.5-3GB (depending on active models)
+# - CPU: ~0.75-2 cores (ML inference + web interface)
+# - Disk: ~500MB base + data growth
+# - Network: Multi-broker API connections
+#
+# =============================================================================
