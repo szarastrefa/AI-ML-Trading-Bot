@@ -1,44 +1,100 @@
-# AI/ML Trading Bot v3.0 - Compatibility Fixed Dockerfile
-# Python 3.10 + numpy 1.24.3 + TensorFlow 2.13.0
+# AI/ML Trading Bot v5.0 - PROFESSIONAL CONTROL PANEL
+# Optimized Dockerfile for production deployment
 
-FROM python:3.10-slim
+FROM python:3.10-slim as base
 
-# Environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONIOENCODING=utf-8
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
+# Set environment variables for Python and TensorFlow optimization
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONIOENCODING=utf-8 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
+# TensorFlow optimization environment variables
+ENV TF_USE_LEGACY_KERAS=1 \
+    TF_CPP_MIN_LOG_LEVEL=2 \
+    TF_ENABLE_ONEDNN_OPTS=0 \
+    OMP_NUM_THREADS=4
+
+# Create app user for security (non-root)
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies (minimal + build tools for ML)
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (build stage)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gcc \
     g++ \
+    make \
+    pkg-config \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get autoremove -y
 
-# Upgrade pip
-RUN pip install --no-cache-dir --upgrade pip
+# Upgrade pip to latest version
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy and install Python dependencies
+# Copy requirements first (better Docker layer caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip cache purge
 
 # Copy application code
 COPY app/ ./app/
+COPY config/ ./config/
 
-# Create data directories
-RUN mkdir -p /app/data /app/logs /app/tmp
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/data /app/logs /app/backups /app/models /app/tmp \
+    && chown -R appuser:appuser /app
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+# Switch to non-root user
+USER appuser
+
+# Health check for v5.0 professional panel
+HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=5 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Expose port
-EXPOSE 8000
+# Expose ports
+EXPOSE 8000 8001
 
-# Start command
+# Labels for container identification
+LABEL version="5.0.0" \
+      description="AI/ML Trading Bot v5.0 - Professional Control Panel" \
+      maintainer="AI Trading Bot Team" \
+      github="https://github.com/szarastrefa/AI-ML-Trading-Bot"
+
+# Start command - Professional Control Panel v5.0
 CMD ["python", "-u", "app/main.py"]
+
+# =============================================================================
+# BUILD INSTRUCTIONS:
+# =============================================================================
+# 
+# Development build:
+#   docker build -t ai-trading-bot:dev .
+#   docker run -p 8000:8000 ai-trading-bot:dev
+# 
+# Production build:
+#   docker build -t ai-trading-bot:v5.0 .
+#   docker-compose up -d --build
+# 
+# Access:
+#   - Control Panel: http://localhost:8000
+#   - API Docs: http://localhost:8000/docs
+#   - Health Check: http://localhost:8000/health
+# 
+# Features:
+#   ✅ Professional Control Panel with 10 sections
+#   ✅ Multi-broker authentication (13+ brokers)
+#   ✅ 4 AI/ML Trading Strategies
+#   ✅ 6 ML Models (TensorFlow + Scikit-learn)
+#   ✅ Real-time monitoring and logging
+#   ✅ Emergency controls and risk management
+#   ✅ Production-ready deployment
+# =============================================================================
